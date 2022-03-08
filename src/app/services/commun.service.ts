@@ -8,4 +8,6 @@ export class CommunService {
   constructor() { }
 
   theme?:string;
+  mode?:string;
+  timer?:number;
 }

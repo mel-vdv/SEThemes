@@ -39,7 +39,7 @@ export class ThemeComponent implements OnInit {
   retour(){
     if( document.querySelector('.choix')!.className==='choix vert'){this.commun.theme = this.choix;
     } 
-    this.router.navigate(['/']);
+    this.router.navigate(['/jeu']);
   }
 
   choisir(){

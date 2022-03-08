@@ -12,10 +12,11 @@ export class JeuComponent implements OnInit {
 
 
   title = 'ng-setheme';
+
   set = false;
   image = "rien";
   score = 0;
-  temps = 0;
+  temps!:number;
   htmlMin = '00';
   htmlSec = '00';
   theme = ''; douze?: any;
@@ -62,7 +63,7 @@ export class JeuComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.commun.theme = 'bonbons';
+    this.temps = 0;
     this.debuter();
   }
   //--------------------------------------------------------------------------
