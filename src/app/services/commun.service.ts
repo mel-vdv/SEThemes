@@ -7,6 +7,5 @@ export class CommunService {
 
   constructor() { }
 
-  compThemeVis?:boolean;
   theme?:string;
 }

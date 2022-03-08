@@ -9,27 +9,7 @@
 </head>
 
 <body>
-  <div class="container">
-    <div class="info">
-      <div class="rubrique"><button (click)="changerTheme()">theme</button></div>
-      <div class="rubrique"><img src="{{image}}" alt="image"></div>
-      <div class="rubrique score"> {{score}}</div>
-      <div class="rubrique"><img src="./../../../assets/sablier.png" alt=""></div>
-      <div class=" rubrique timer"> {{htmlMin}}:{{htmlSec}}</div>
-
-    </div>
-    
-    <div class="jeu">
-      
-      <div *ngFor="let carte of douze">
-        <div class="case {{carte.classe}}"><img src="./../assets/{{commun.theme}}/{{carte.perso}}.png" alt=""
-            (click)="select(carte.perso)"></div>
-      </div>
-    </div>
-  </div>
-
-  <app-theme *ngIf="commun.compThemeVis"></app-theme>
-
+ <router-outlet></router-outlet>
 </body>
 
 </html>

@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { CommunService } from './../../services/commun.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -9,7 +10,8 @@ import { Component, OnInit } from '@angular/core';
 export class ThemeComponent implements OnInit {
 
   constructor(
-    public commun: CommunService
+    public commun: CommunService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -37,7 +39,7 @@ export class ThemeComponent implements OnInit {
   retour(){
     if( document.querySelector('.choix')!.className==='choix vert'){this.commun.theme = this.choix;
     } 
-    this.commun.compThemeVis = false;
+    this.router.navigate(['/']);
   }
 
   choisir(){
