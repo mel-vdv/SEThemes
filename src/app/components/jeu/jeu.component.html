@@ -1,4 +1,5 @@
 <div class="container">
+
   <div class="info">
     <div class="rubrique">
       <div class="cadre">
@@ -6,23 +7,23 @@
       </div>
       <div class="score">{{commun.score}}</div>
     </div>
-
     <div class="rubrique"><img class="{{image}}" src="./../../../assets/{{image}}.png" alt="image"></div>
-
-    <div class=" rubrique timer"><img src="./../../../assets/sablier.png" alt=""> {{htmlMin}}:{{htmlSec}}</div>
+    <div class=" rubrique timer"><img src="./../../../assets/sablier.png" alt=""> {{commun.htmlMin}}:{{commun.htmlSec}}</div>
   </div>
+  <!------------------------------------------------------------------------------------------------------------>
 
   <div class="jeu">
     <div *ngFor="let carte of commun.douze">
-      <div class="case {{carte.classe}}"><img src="./../../../assets/{{commun.theme}}/{{carte.perso}}.png" alt=""
-          (click)="select(carte.perso)"></div>
+      <div  (click)="select(carte.perso)" class="case {{carte.classe}}"><img src="./../../../assets/{{commun.theme}}/{{carte.perso}}.png" alt=""
+         ></div>
     </div>
   </div>
-
+  <!------------------------------------------------------------------------------------------------------------>
   <div class="info bouton">
     <div class="rubrique"><img (click)="home()" src="./../../../assets/home.png" alt="home"></div>
     <div class="rubrique"><img (click)="restart()" src="./../../../assets/restart.png" alt="restart"></div>
     <div class="rubrique"><img (click)="changerTheme()" src="./../../../assets/palette.png" alt="palette"></div>
     <div class="rubrique"><img (click)="question()" src="./../../../assets/question.png" alt="question"></div>
   </div>
+
   <div>

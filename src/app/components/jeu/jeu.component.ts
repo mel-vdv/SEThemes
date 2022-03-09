@@ -18,31 +18,12 @@ export class JeuComponent implements OnInit {
     public commun: CommunService,
     private router: Router
   ) { }
-//-------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------
   ngOnInit(): void {
     if (!this.commun.enCours) { this.debuter(); }
   }
   //----------------------------------------------------------------------------
-  htmlMin!:string;htmlSec!:string;
-  lancerLeTimer() {
-    this.htmlMin = '00';
-    this.htmlSec= '00';
-    this.commun.timer=0;
-    this.commun.timerOn = true;
-    setInterval(() => { // !! fonction arrow et non focntion anonymous car 'this' !!
-      if (this.commun.timer! < 15) {
-        this.commun.timer!++;
-        let min = Math.floor(this.commun.timer! / 60);
-        let sec = this.commun.timer! - (min * 60);
-        this.htmlMin = min < 10 ? '0' + min : min + '';
-        this.htmlSec = sec < 10 ? '0' + sec : sec + '';
-      }
-      else {
-        this.router.navigate(['/fin']);
-      }
-    }, 800);
 
-  }
   //---------------------------------------------------------------------------
   debuter() {
     this.trio = [];
@@ -83,39 +64,39 @@ export class JeuComponent implements OnInit {
     this.commun.douze = [];
     for (let x = 0; x < 12; x++) {
       let random = Math.floor(Math.random() * this.commun.cartes.length);
-      this.commun.douze.push({ perso: this.commun.cartes[random], classe: "no" });
+      this.commun.douze.push({ perso: this.commun.cartes[random], classe: "case" });
       this.commun.cartes.splice(random, 1);
     }
-    if (!this.commun.timerOn) { this.lancerLeTimer(); }
+    if (!this.commun.timerOn) { this.commun.lancerLeTimer(); }
 
   }
   //************************************************************************************ */
   trio!: string[];
-  index1 = 0;
-  index2 = 0;
-  index3 = 0;
+
   select(carte: string) {
-    if (this.trio.length === 2) {
-      this.trio.push(carte);
-      this.index1 = this.commun.douze.findIndex((element: any) => element.perso === this.trio[0]);
-      this.index2 = this.commun.douze.findIndex((element: any) => element.perso === this.trio[1]);
-      this.index3 = this.commun.douze.findIndex((element: any) => element.perso === this.trio[2]);
-      if (this.commun.douze[this.index3].classe === 'case') { this.commun.douze[this.index3].classe = 'case rouge'; }
-      if (this.commun.douze[this.index3].classe = 'case rouge') { this.commun.douze[this.index3].classe = 'case'; this.trio.splice(this.index3, 1); return; }
-      this.verifier();
-      this.trio = [];
+    console.log('click:', carte);
+    this.image = "rien";
+
+    let index = this.commun.douze.findIndex((element: any) => element.perso === carte);
+    if (this.commun.douze[index].classe !== 'case rouge') {
+      if (this.trio.length < 3) {
+        this.commun.douze[index].classe = 'case rouge'; this.trio.push(carte);
+        console.log('+1', this.trio.length);
+      }
     }
     else {
-      this.image = "rien";
-      let index = this.commun.douze.findIndex((element: any) => element.perso === carte);
-
-      if (this.commun.douze[index].classe === 'case') { this.commun.douze[index].classe = 'case rouge'; this.trio.push(carte); }
-      else { this.commun.douze[index].classe = 'case'; this.trio.splice(index, 1); }
-
+      console.log('case rouge:');
+      this.commun.douze[index].classe = 'case'; this.trio = this.trio.filter((e: any) => e !== carte);
+      console.log('trio:', this.trio.length);
+    }
+    if (this.trio.length === 3) {
+      console.log('trio =3 on verifie le set');
+      this.verifier();
     }
   }
   //************************************************************************* */
   verifier() {
+    console.log('on verifie');
     let prem = this.trio[0].split('');
     let second = this.trio[1].split('');
     let troisiem = this.trio[2].split('');
@@ -133,44 +114,53 @@ export class JeuComponent implements OnInit {
   }
   //********************************************************************** */
   gain() {
-
     this.image = "etoile";
     this.set = true;
     this.commun.score! ++;
-    if (this.commun.score === 2) {
+    if (this.commun.mode === 1 && this.commun.score === 10) {
       this.router.navigate(['fin']);
     }
     this.remplacer3();
   }
   //------------------
   loose() {
+    this.trio = [];
     this.set = false;
     this.image = "error";
-    this.commun.douze.forEach((element: any) => {
-      element.classe = 'case';
-    });
-  }
-  //-------------------------
-  remplacer3() {
     setTimeout(() => {
       this.commun.douze.forEach((element: any) => {
         element.classe = 'case';
       });
     }, 400);
+  }
+  //-------------------------
+  index1 = 0;
+  index2 = 0;
+  index3 = 0;
+  remplacer3() {
+    this.index1 = this.commun.douze.findIndex((element: any) => element.perso === this.trio[0]);
+    this.index2 = this.commun.douze.findIndex((element: any) => element.perso === this.trio[1]);
+    this.index3 = this.commun.douze.findIndex((element: any) => element.perso === this.trio[2]);
+    this.trio = [];
+    /* setTimeout(() => {
+       this.commun.douze.forEach((element: any) => {
+         element.classe = 'case';
+       });
+     }, 400);*/
     let hasard1 = Math.floor(Math.random() * this.commun.cartes.length);
+    let hasard2 = Math.floor(Math.random() * (this.commun.cartes.length - 1));
+    let hasard3 = Math.floor(Math.random() * (this.commun.cartes.length - 2));
+
     this.commun.douze.splice(this.index1, 1, { perso: this.commun.cartes[hasard1], classe: 'case' });
     this.commun.cartes.splice(hasard1, 1);
-
-    let hasard2 = Math.floor(Math.random() * this.commun.cartes.length);
     this.commun.douze.splice(this.index2, 1, { perso: this.commun.cartes[hasard2], classe: 'case' });
     this.commun.cartes.splice(hasard2, 1);
-
-    let hasard3 = Math.floor(Math.random() * this.commun.cartes.length);
     this.commun.douze.splice(this.index3, 1, { perso: this.commun.cartes[hasard3], classe: 'case' });
     this.commun.cartes.splice(hasard3, 1);
   }
   //-----------------------------------------
   home() {
+    this.commun.enCours = false; this.commun.timerOn = false;
     this.router.navigate(['/']);
   }
   //------------------------------------------
@@ -183,7 +173,17 @@ export class JeuComponent implements OnInit {
   }
   //------------------------------------------
   question() {
-    this.remplacer3();
+    console.log('questionclik ');
+
+    for (let i = 0; i <3; i ++) {
+      
+      let l = this.commun.cartes.length;
+      console.log('l: ',l);
+      let n1 = Math.floor((i+1)*0.3 * l);
+      this.commun.douze.splice(i, 1, { perso: this.commun.cartes[n1], classe: 'case' });
+      this.commun.cartes.splice(n1, 1);
+    }
+    return;
   }
 
 }
