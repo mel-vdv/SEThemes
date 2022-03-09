@@ -6,8 +6,12 @@ import { Injectable } from '@angular/core';
 export class CommunService {
 
   constructor() { }
-
+ enCours?:boolean;
+ timerOn?:boolean;
   theme?:string;
-  mode?:string;
+  mode?:number;
   timer?:number;
+  cartes!:string[];
+  douze?:any;
+  score?:number;
 }

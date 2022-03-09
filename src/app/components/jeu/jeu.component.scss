@@ -23,17 +23,20 @@
    max-width: 15vw;}
 .jeu{
     width: 100vw;
-    height: 92vw;
+    height: 85vw;
     display:flex;
     flex-direction:row;
+    justify-content: space-between;
+  
     flex-wrap: wrap; 
 }
 .case{
+    margin-top: 1.25vw;
     box-sizing: border-box;
     background-color: white;
-    margin:1.5vw;
+    //margin:1.5vw;
     height:20vw;
-    width: 29vw;
+    width: 32.5vw;
     border-radius: 3vw;
     overflow: hidden;
     display: flex;justify-content: center; align-items: center;
@@ -45,21 +48,19 @@
     height:100%;
     width: 100%;
 }
-.score{
- 
-}
+
 .timer{
     text-align: center;
     color: white;
     font-size: 8vw;
 }
 .error{
-    animation: agiter 1s linear 0s  ;
-    animation-iteration-count: 2;
+    animation: agiter 1s linear ;
+    animation-iteration-count: 1;
 }
 .etoile{
     z-index: 5;
-    animation: monter 1s ease-in;
+    animation: monter .8s ease-in;
     animation-fill-mode: forwards;
 }
 .bouton div:active{
@@ -77,22 +78,61 @@
     0%{
         transform: rotateZ(0);
         }
+        5%{
+            transform: rotateZ(-15deg);
+        }
+        10%{
+          
+            transform: rotateZ(15deg);
+        }
         15%{
             transform: rotateZ(-15deg);
         }
         20%{
+          
             transform: rotateZ(15deg);
         }
         25%{
-            transform: rotateZ(-10deg);
+            transform: rotateZ(-15deg);
         }
         30%{
-            transform: rotateZ(10deg);
+          
+            transform: rotateZ(15deg);
         }
         35%{
+            transform: rotateZ(-10deg);
+        }
+        40%{
+            transform: rotateZ(10deg);
+        }
+        
+        45%{
+            transform: rotateZ(-10deg);
+        }
+        50%{
+            transform: rotateZ(10deg);
+        }
+        
+        55%{
+            transform: rotateZ(-10deg);
+        }
+        60%{
+            transform: rotateZ(10deg);
+        }
+        65%{
             transform: rotateZ(-6deg);
         }
-        40%,100%{
+        70%{
+            transform: rotateZ(6deg);
+        }
+        75%{
+            transform: rotateZ(-6deg);
+        }
+        80%{
+            transform: rotateZ(6deg);
+        }
+        
+        85%,100%{
             transform: rotateZ(0);
         
         }

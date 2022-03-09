@@ -16,10 +16,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  mode(choix:any){
+  mode(choix:number){
+   
     this.commun.theme= 'bonbons';
     this.commun.mode =  choix;
-    this.router.navigate(['/jeu']);
+    setTimeout(()=>{this.router.navigate(['/jeu']);},1000);
   }
 
 }
