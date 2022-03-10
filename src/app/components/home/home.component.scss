@@ -5,16 +5,33 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
 }
 .container div{
+  margin-top:5vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5vw;
     background-color: rgb(80, 68, 68);
     border-radius: 5vw;
-    height: 20vw; width: 70vw;
+    height: 25vw; width: 80vw;
     color: white;
     text-align: center;
     font-size: 10vw;
 }
 .container div:active{
   transform: scale(0.9);
+}
+#intro{
+  background-color: rgba(0,0,0,0);
+  color:rgb(80, 68, 68);
+}
+img{
+  width: 25vw; height: auto;
+  background-color: white;
+}
+.images{
+  display: flex; justify-content: space-around;
 }

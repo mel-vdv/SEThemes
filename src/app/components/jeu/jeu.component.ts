@@ -121,7 +121,7 @@ export class JeuComponent implements OnInit {
     this.image = "etoile";
     this.set = true;
     this.commun.score! ++;
-    if (this.commun.mode === 1 && this.commun.score === 3) {
+    if (this.commun.mode === 1 && this.commun.score === 10) {
       clearInterval(this.commun.tictac); this.commun.timerOn = false;
       this.commun.enregistrerPartie(1);
       this.router.navigate(['fin']);

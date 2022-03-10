@@ -1,21 +1,19 @@
 <div class="container">
-    <div *ngIf="statVis">
-        score: {{commun.score}} <br>
-        time: {{commun.timer}} sec
+    <div class="bravo" *ngIf="!statVis && commun.recordBattu">BRAVO!!! RECORD BATTU !!</div>
 
-        <br>
-
-        votre record le {{commun.recordD | date:'shortDate'}}
-        {{commun.sets}} en 3 minutes
-        10 sets en {{commun.secs}} secondes
-
-        <br>
-        {{commun.totalSets}} sets au total depuis le {{commun.inscrD | date:'shortDate'}}
+    <div *ngIf="statVis" class="stat">
+        <div *ngIf="commun.mode===2">{{commun.score}} sets en 3 min </div>
+        <div *ngIf="commun.mode===1">10 sets en {{commun.timer}} sec</div>
+        <div *ngIf="!commun.recordBattu">Votre record du {{commun.recordD | date:'shortDate'}} :</div>
+        <div *ngIf="commun.mode===2 && !commun.recordBattu">{{commun.sets}} sets en 3 min </div>
+        <div *ngIf="commun.mode===1 && !commun.recordBattu">10 sets en {{commun.secs}} sec</div>
+        <div>{{commun.totalSets}} sets au total </div>
+        <div>(depuis le {{commun.inscrD | date:'shortDate'}})</div>
     </div>
 
-    <div *ngIf="!statVis" (click)="stat()"><img src="./../../../assets/stat.png" alt="stat"></div>
+    <div *ngIf="!statVis" class="logo" (click)="stat()"><img src="./../../../assets/stat.png" alt="stat"></div>
 
-    <div (click)="nav('')"><img src="./../../../assets/home.png" alt="home"></div>
+    <div (click)="nav('')" class="logo"><img src="./../../../assets/home-fin.png" alt="home"></div>
 
 
 </div>

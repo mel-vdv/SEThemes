@@ -25,6 +25,7 @@ export class CommunService {
 
   totalSets!: number; inscrD!: number;
   sets?: number; secs?: number; recordD!:number;
+  recordBattu?:boolean;
 
 
   //----------------------------------------
@@ -32,18 +33,18 @@ export class CommunService {
     let temps;  let nb;
     if (mode === 1) {
       if (this.secs! === 0 || this.secs! > this.timer!) { 
-        this.recordD= Date.now();
-        
+        this.recordD= Date.now();this.recordBattu=true;
         temps = this.timer; nb = this.sets;
        }
       else {
-        temps = this.secs;nb = this.sets;
+        temps = this.secs; nb = this.sets;
+        this.recordBattu = false;
       }
     }
     else {  // si mode 2 :
-      if (this.sets! === 0 || this.sets! < this.score!) { nb = this.score; this.recordD= Date.now(); temps = this.secs; }
+      if (this.sets! === 0 || this.sets! < this.score!) { nb = this.score; this.recordD= Date.now(); temps = this.secs; this.recordBattu=true; }
       else {
-        nb = this.sets;temps = this.secs;
+        nb = this.sets; temps = this.secs; this.recordBattu = false;
       }
     }
     let updatage = {
@@ -53,9 +54,7 @@ export class CommunService {
       secs: temps,
       recordD: this.recordD
     }
-
     this.crud.enregistrer(updatage);
-    
   }
   //-----------------------------------------
   tictac:any;
@@ -64,8 +63,8 @@ export class CommunService {
     this.htmlSec = '00';
     this.timer = 0;
     this.timerOn = true;
-    this.tictac = setInterval(() => { // !! fonction arrow et non focntion anonymous car 'this' !!
-      if ((this.mode === 2 && this.timer! < 60) || (this.mode === 1 && this.score! < 10)) {
+    this.tictac = setInterval(() => { // !! fonction arrow et non fonction anonymous car 'this' !!
+      if ((this.mode === 2 && this.timer! < 180) || (this.mode === 1 && this.score! < 10)) {
         this.timer!++;
         let min = Math.floor(this.timer! / 60);
         let sec = this.timer! - (min * 60);
