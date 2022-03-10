@@ -118,7 +118,7 @@ export class JeuComponent implements OnInit {
     this.set = true;
     this.commun.score! ++;
     if (this.commun.mode === 1 && this.commun.score === 3) {
-      clearInterval(this.commun.tictac); 
+      clearInterval(this.commun.tictac); this.commun.timerOn=false;
       this.commun.enregistrerPartie(1);
       this.router.navigate(['fin']);
     }

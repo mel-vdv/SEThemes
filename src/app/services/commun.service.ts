@@ -73,7 +73,7 @@ export class CommunService {
         this.htmlSec = sec < 10 ? '0' + sec : sec + '';
       }
       else {
-        clearInterval(this.tictac);
+        clearInterval(this.tictac); this.timerOn = false;
         this.enregistrerPartie(2);
         this.router.navigate(['/fin']);
       }

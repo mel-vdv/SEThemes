@@ -6,23 +6,19 @@
     align-items: center;
     justify-content: center;
 }
-.container div:nth-child(1){
-    z-index: 1;
-    background-color: rgb(80, 68, 68);
-    border-radius: 5vw;
-    height: 40vw; width: 70vw;
+.container div{
+    height: 50vh;
+    width: 100vw;
     color: white;
-    display: flex; justify-content: center; align-items: center; flex-direction: column;
+    //display: flex; justify-content: center; align-items: center; flex-direction: column;
     font-size: 10vw;
-    animation: vibrer 1s linear infinite;
-}
-.container div:nth-child(2){
-    z-index: 0;
-    position: relative;
-    top: -41vw;
-    background-color: orangered;
-    border-radius: 5vw;
-    height: 42vw; width: 72.8vw;
+    //animation: vibrer 1s linear infinite;
+    margin-bottom: 5vh
+};
+
+
+.container div img {
+    height: 25vh; width: auto;
 }
 
 @keyframes vibrer{

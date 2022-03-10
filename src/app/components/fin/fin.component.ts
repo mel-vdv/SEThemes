@@ -20,5 +20,9 @@ export class FinComponent implements OnInit {
   nav(loc:string){
     this.router.navigate([`/${loc}`]);
   }
+  statVis=false;
+  stat(){
+this.statVis=true;
+  }
 
 }
