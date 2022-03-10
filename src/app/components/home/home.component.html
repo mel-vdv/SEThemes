@@ -1,7 +1,9 @@
 
+    
     <div class="container">
-        <div (click)="mode(1)">10 SETS</div>
-        <div (click)="mode(2)">3MINUTES</div>
+        <div *ngIf="!commun.idu" (click)="authGoogle()">CONNEXION</div> 
+        <div *ngIf="commun.idu" (click)="mode(1)">10 SETS</div>
+        <div *ngIf="commun.idu" (click)="mode(2)">3MINUTES</div>
     </div>
 
 

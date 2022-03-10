@@ -3,5 +3,14 @@
        score: {{commun.score}} <br>
        time: {{commun.timer}} sec
     </div> 
-    <div></div>
+    <div *ngIf="commun.recordD!==0">
+        votre record le {{commun.recordD}}
+        {{commun.sets}} en 3 minutes
+        10 sets en {{commun.secs}}
+    </div>
+    <div>
+        {{commun.totalSets}} sets au total depuis le {{commun.inscrD}}
+    </div>
+
+    <div (click)="nav('')"><img src="./../../../assets/home.png" alt="home"></div>
 </div>

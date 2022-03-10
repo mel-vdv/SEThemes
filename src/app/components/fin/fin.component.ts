@@ -15,7 +15,10 @@ export class FinComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
+    this.commun.enCours=false;
+  }
+  nav(loc:string){
+    this.router.navigate([`/${loc}`]);
   }
 
 }
