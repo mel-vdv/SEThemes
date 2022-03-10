@@ -14,8 +14,7 @@
 
   <div class="jeu">
     <div *ngFor="let carte of commun.douze">
-      <div  (click)="select(carte.perso)" class="case {{carte.classe}}"><img src="./../../../assets/{{commun.theme}}/{{carte.perso}}.png" alt=""
-         ></div>
+      <div  (click)="select(carte.perso)" class="{{carte.classe}}"><img src="./../../../assets/{{commun.theme}}/{{carte.perso}}.png" alt=""></div>   
     </div>
   </div>
   <!------------------------------------------------------------------------------------------------------------>
