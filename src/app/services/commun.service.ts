@@ -27,9 +27,12 @@ export class CommunService {
   sets?: number; secs?: number; recordD!:number;
   recordBattu?:boolean;
 
+  recording?:boolean;
+
 
   //----------------------------------------
   enregistrerPartie(mode:number) {
+    if(!this.recording){
     let temps;  let nb;
     if (mode === 1) {
       if (this.secs! === 0 || this.secs! > this.timer!) { 
@@ -47,6 +50,7 @@ export class CommunService {
         nb = this.sets; temps = this.secs; this.recordBattu = false;
       }
     }
+
     let updatage = {
       id: this.idu,
       totalSets: this.totalSets + this.score!,
@@ -55,7 +59,8 @@ export class CommunService {
       recordD: this.recordD
     }
     this.crud.enregistrer(updatage);
-  }
+    this.recording = true;
+  }}
   //-----------------------------------------
   tictac:any;
   lancerLeTimer() {

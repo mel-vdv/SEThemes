@@ -125,6 +125,7 @@ export class JeuComponent implements OnInit {
       clearInterval(this.commun.tictac); this.commun.timerOn = false;
       this.commun.enregistrerPartie(1);
       this.router.navigate(['fin']);
+      return;
     }
     this.remplacer3();
   }

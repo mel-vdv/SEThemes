@@ -19,19 +19,19 @@ export class ThemeComponent implements OnInit {
   }
 
   n=0;
-  listChoix= ['normal','bonbons', 'bites']; 
+  listChoix= ['normal','bonbons', 'bites','poissons']; 
   choix =this.listChoix[this.n];
 
   haut(){
     if( document.querySelector('.choix')!.className==='choix vert'){ document.querySelector('.choix')!.classList.remove('vert');}
-    if(this.n===2){this.n=-1;} 
+    if(this.n===3){this.n=-1;} 
     this.n ++;
    this.choix = this.listChoix[this.n];
 
   }
   bas(){
     if( document.querySelector('.choix')!.className==='choix vert'){ document.querySelector('.choix')!.classList.remove('vert');}
-    if(this.n===0){this.n=3;} 
+    if(this.n===0){this.n=4;} 
    this.n--;
   this.choix= this.listChoix[this.n];
 
