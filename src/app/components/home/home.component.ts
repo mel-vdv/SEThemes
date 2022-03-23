@@ -51,7 +51,7 @@ if(this.user){
 //////////////////////////////////////////////////
   mode(choix:number){
     this.commun.theme= 'normal';
-    this.commun.mode =  choix;
+  //  this.commun.mode =  choix;
     setTimeout(()=>{this.router.navigate(['/jeu']);},1000);
   }
 //-------------------------------------------

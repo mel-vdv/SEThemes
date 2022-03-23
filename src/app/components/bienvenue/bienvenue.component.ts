@@ -1,3 +1,4 @@
+import { CommunService } from './../../services/commun.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
@@ -9,8 +10,10 @@ import { Component, OnInit } from '@angular/core';
 export class BienvenueComponent implements OnInit {
 
   constructor(
-    private router : Router
+    private router : Router,
+    public commun : CommunService
   ) { }
+  niveauVis= false;
 
   ngOnInit(): void {
   }
@@ -19,4 +22,14 @@ click(choix:any){
 this.router.navigate([`/${choix}`]);
   }, 600);
 }
+//---------------------
+clickNiveau(){
+  this.niveauVis= true
+}
+choixNiveau(niv:number){
+  this.commun.niveau = niv;
+  console.log('niveau : ', this.commun.niveau);
+  this.router.navigate(['/theme']);
+}
+//---------------------
 }

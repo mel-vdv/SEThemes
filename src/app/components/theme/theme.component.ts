@@ -37,13 +37,16 @@ export class ThemeComponent implements OnInit {
 
   }
   retour(){
-    if( document.querySelector('.choix')!.className==='choix vert'){this.commun.theme = this.choix;
-    } 
-    this.router.navigate(['/jeu']);
+
+    this.router.navigate(['/']);
   }
 
   choisir(){
+    this.commun.theme = this.choix;
     document.querySelector('.choix')!.classList.toggle('vert');
+   setTimeout(() => {
+     this.router.navigate(['/challenge']);
+   }, 600); 
   }
 
 }

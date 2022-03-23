@@ -22,6 +22,7 @@ export class JeuComponent implements OnInit {
   ) { }
   //-------------------------------------------------------------------------------
   ngOnInit(): void {
+console.log('mode, niveau, theme :', this.commun.mode, this.commun.theme, this.commun.niveau);
     this.trio=[];
 
     if (!this.commun.enCours) { this.debuter(); }
@@ -100,12 +101,10 @@ export class JeuComponent implements OnInit {
   }
   //************************************************************************************ */
   select(carte: string) {
-    console.log('click:', carte);
     this.image = "rien";
 
     let index = this.commun.douze.findIndex((element: any) => element.perso === carte);
 
-    console.log('classe  ',this.commun.douze[index].classe);
 
     if (this.commun.douze[index].classe !== 'case rouge') {
       if (this.trio.length < 3) {
@@ -120,8 +119,6 @@ export class JeuComponent implements OnInit {
     else {
       this.commun.douze[index].classe = 'case'; this.trio = this.trio.filter((e: any) => e !== carte);
     }
-
-
 
   }
   //************************************************************************* */
@@ -146,7 +143,7 @@ export class JeuComponent implements OnInit {
     this.image = "etoile";
     this.set = true;
     this.commun.score! ++;
-    if (this.commun.mode === 1 && this.commun.score === 10) {
+    if (this.commun.mode === '10sets' && this.commun.score === 10) {
       clearInterval(this.commun.tictac); this.commun.timerOn = false;
       this.commun.enregistrerPartie(1);
       this.router.navigate(['fin']);

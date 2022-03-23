@@ -13,10 +13,12 @@ export class CommunService {
   ) { }
    idu?:string;
 
+   niveau?:number;
+
   enCours?: boolean;
   timerOn?: boolean;
   theme?: string;
-  mode?: number;
+  mode?: string;
   timer?: number;
   cartes!: string[];
   douze?: any;
@@ -69,7 +71,7 @@ export class CommunService {
     this.timer = 0;
     this.timerOn = true;
     this.tictac = setInterval(() => { // !! fonction arrow et non fonction anonymous car 'this' !!
-      if ((this.mode === 2 && this.timer! < 180) || (this.mode === 1 && this.score! < 10)) {
+      if ((this.mode === '3min' && this.timer! < 180) || (this.mode === '10sets' && this.score! < 10)) {
         this.timer!++;
         let min = Math.floor(this.timer! / 60);
         let sec = this.timer! - (min * 60);

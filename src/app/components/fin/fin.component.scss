@@ -1,7 +1,8 @@
 .container{
     width:100vw; height: 100vh;
     position: absolute; top:0px;left:0px;
-    background: linear-gradient(orange, rgb(250, 179, 85));
+    //background: linear-gradient(orange, rgb(250, 179, 85));
+    background: linear-gradient(#46abe8,#c4fffd);
     display: flex;flex-direction: column;
     align-items: center;
     justify-content: space-around;

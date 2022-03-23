@@ -1,1 +1,9 @@
-<p>challenge works!</p>
+
+<div (click)="retour()" class="retour"><img src="./../../../assets/retour.png" alt="retour"></div>
+<div class="compTheme">
+    <div class="haut" (click)="haut()"><img src="./../../../assets/haut.png" alt=""></div>
+    <div (click)="choisir()" class="choix">
+       <img  src="./../../../assets/{{choix}}.png" alt=""> 
+    </div>
+    <div class="bas"(click)="bas()"><img src="./../../../assets/bas.png" alt=""></div>
+</div>

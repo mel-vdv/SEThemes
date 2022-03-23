@@ -14,8 +14,13 @@
         <div (click)="click('but')"><img src="./../../../assets/regles.png" alt="regles"></div>
     </div>
     <div class="jouer">
-        <div (click)="click('niveau')"><img src="./../../../assets/jouer.png" alt="game"></div>
+        <div *ngIf="!niveauVis" (click)="clickNiveau()"><img src="./../../../assets/jouer.png" alt="game"></div>
+        </div>    
+    <div *ngIf="niveauVis" class="choix">
+        <div class="choi" (click)="choixNiveau(1)">DEBUTANT</div>
+        <div class="choi" (click)="choixNiveau(2)">CONFIRME</div>
     </div>
+
 
 
     <div class="droite quatre">

@@ -22,17 +22,32 @@
     width: 85vw;
 }
 
-.jouer div, .but div{
+.jouer div, .but div, .choi{
     border-radius: 5vw;
     background-color:#46abe8;
     overflow: hidden;
     transition: transform 1s;
     display: flex; align-items: center; justify-content: center;
 }
-.jouer div:active, .but div:active{
-    transform: scale(0.8);
+.jouer div:active, .but div:active, .choi:active{
+    transform: scale(0.7);
 }
+.choix{
+    width: 100vw;
+    display: flex;
+    align-items: center; justify-content: space-around;
+    
+}
+.choi{
+    margin-top: 5vw;
+    width: 45vw;
+    height: 20vh;
+    color: white;
+    font-family: 'Segoe print';
+    font-size: 7vw;
+    font-weight: bold;
 
+}
 ///////////////////////////////
 .jouer img, .but img{
     width: 90%;
