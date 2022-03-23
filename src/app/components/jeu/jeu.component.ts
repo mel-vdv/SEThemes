@@ -1,5 +1,6 @@
+import { CrudservService } from './../../services/crudserv.service';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommunService } from 'src/app/services/commun.service';
 
 @Component({
@@ -18,14 +19,29 @@ export class JeuComponent implements OnInit {
 
   constructor(
     public commun: CommunService,
-    private router: Router
+    private router: Router,
+    private ar : ActivatedRoute,
+    private crud : CrudservService
   ) { }
   //-------------------------------------------------------------------------------
   ngOnInit(): void {
-console.log('mode, niveau, theme :', this.commun.mode, this.commun.theme, this.commun.niveau);
+
+    if(!this.commun.idu){
+      console.log('jeu : idu inconnu');
+      this.ar.paramMap.subscribe((params: any) => {
+     this.commun.idu = params.get('id');
+ //on récupère les donnees:
+ this.crud.getId(this.commun.idu).subscribe((data:any)=>{
+
+ });
+  });
+   }
+
     this.trio=[];
 
-    if (!this.commun.enCours) { this.debuter(); }
+    if (!this.commun.enCours) { 
+      console.log('on debute'); 
+      this.debuter(); }
   }
   //----------------------------------------------------------------------------
 
@@ -35,7 +51,7 @@ console.log('mode, niveau, theme :', this.commun.mode, this.commun.theme, this.c
     this.commun.enCours = true;
     this.commun.timer = 0;
     this.commun.score = 0;
-    if(this.commun.theme!=='pommes'){
+    if(this.commun.niveau==2){
     this.commun.cartes = [
       'r1rb', 'b1rb', 'v1rb',
       'r2rb', 'b2rb', 'v2rb',
@@ -67,35 +83,26 @@ console.log('mode, niveau, theme :', this.commun.mode, this.commun.theme, this.c
       'r2ps', 'b2ps', 'v2ps',
       'r3ps', 'b3ps', 'v3ps'
     ];
+  }
+    else{
+      this.commun.cartes=[
+        'r1rb', 'b1rb', 'v1rb',
+        'r2rb', 'b2rb', 'v2rb',
+        'r3rb', 'b3rb', 'v3rb',
+        'r1rd', 'b1rd', 'v1rd',
+        'r2rd', 'b2rd', 'v2rd',
+        'r3rd', 'b3rd', 'v3rd',
+        'r1rs', 'b1rs', 'v1rs',
+        'r2rs', 'b2rs', 'v2rs',
+        'r3rs', 'b3rs', 'v3rs'
+      ];
+    }
     this.commun.douze = [];
     for (let x = 0; x < 12; x++) {
       let random = Math.floor(Math.random() * this.commun.cartes.length);
       this.commun.douze.push({ perso: this.commun.cartes[random], classe: "case" });
       this.commun.cartes.splice(random, 1);
     }
-  
-  }
-    else{
-      this.commun.cartes=[
-        'r1rx','v1rx','b1rx',
-        'r2rx','v2rx','b2rx',
-        'r3rx','v3rx','b3rx',
-        'r1lx','v1lx','b1lx',
-        'r2lx','v2lx','b2lx',
-        'r3lx','v3lx','b3lx',
-        'r1px','v1px','b1px',
-        'r2px','v2px','b2px',
-        'r3px','v3px','b3px'
-      ];
-      this.commun.douze = [];
-      for (let x = 0; x < 9; x++) {
-        let random = Math.floor(Math.random() * this.commun.cartes.length);
-        this.commun.douze.push({ perso: this.commun.cartes[random], classe: "case" });
-        this.commun.cartes.splice(random, 1);
-      }
-
-    }
-   
     if (!this.commun.timerOn) { this.commun.lancerLeTimer(); }
 
   }
@@ -143,10 +150,10 @@ console.log('mode, niveau, theme :', this.commun.mode, this.commun.theme, this.c
     this.image = "etoile";
     this.set = true;
     this.commun.score! ++;
-    if (this.commun.mode === '10sets' && this.commun.score === 10) {
+    if ((this.commun.mode === '10sets' && this.commun.score === 10 && this.commun.niveau==2) ||(this.commun.mode === '10sets' && this.commun.score === 5 && this.commun.niveau==1)) {
       clearInterval(this.commun.tictac); this.commun.timerOn = false;
-      this.commun.enregistrerPartie(1);
-      this.router.navigate(['fin']);
+      this.commun.enregistrerPartie('10sets');
+      this.router.navigate([`/fin/${this.commun.idu}`]);
       return;
     }
     this.remplacer3();
@@ -193,9 +200,7 @@ console.log('mode, niveau, theme :', this.commun.mode, this.commun.theme, this.c
     this.debuter();
   }
   //--------------------------------------------------------------------------
-  changerTheme() {
-    this.router.navigate(['/theme']);
-  }
+
   //------------------------------------------
   question() {
     for (let i = 0; i < 3; i++) {

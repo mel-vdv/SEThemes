@@ -11,9 +11,9 @@ export class CommunService {
     private router: Router,
     public crud: CrudservService
   ) { }
-   idu?:string;
+  idu?:string;
 
-   niveau?:number;
+  niveau?:number;
 
   enCours?: boolean;
   timerOn?: boolean;
@@ -33,10 +33,10 @@ export class CommunService {
 
 
   //----------------------------------------
-  enregistrerPartie(mode:number) {
+  enregistrerPartie(mode:string) {
     if(!this.recording){
     let temps;  let nb;
-    if (mode === 1) {
+    if (mode === '10sets') {
       if (this.secs! === 0 || this.secs! > this.timer!) { 
         this.recordD= Date.now();this.recordBattu=true;
         temps = this.timer; nb = this.sets;
@@ -60,6 +60,7 @@ export class CommunService {
       secs: temps,
       recordD: this.recordD
     }
+    console.log('update: ', JSON.stringify(updatage));
     this.crud.enregistrer(updatage);
     this.recording = true;
   }}
@@ -80,7 +81,7 @@ export class CommunService {
       }
       else {
         clearInterval(this.tictac); this.timerOn = false;
-        this.enregistrerPartie(2);
+        this.enregistrerPartie('3min');
         this.router.navigate(['/fin']);
       }
     }, 800);

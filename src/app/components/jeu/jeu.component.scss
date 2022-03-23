@@ -51,6 +51,9 @@
 .rouge{
     border: 1vw solid  orangered;
 }
+.vide{
+    background-color: rgba(0,0,0,0); 
+}
 .case img{
     height:100%;
     width: 100%;
@@ -69,6 +72,8 @@
     z-index: 5;
     animation: monter .8s ease-in;
     animation-fill-mode: forwards;
+    animation: briller 1s linear 0.8s ;
+
 }
 .bouton div:active{
  background-color: rgb(155, 150, 150);
@@ -78,6 +83,15 @@
 @keyframes monter{
     0%{transform: translateY(+130vh)}
     100%{transform: translateY(0)}
+}
+
+@keyframes briller{
+    0%, 100%{
+ transform: scale(1);
+    }
+    50%{
+        transform: scale(1.4);
+    }
 }
 
 

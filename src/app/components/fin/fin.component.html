@@ -1,4 +1,6 @@
 <div class="container">
+
+    <div *ngIf="!statVis && commun.recordBattu"><img src="./../../../assets/trophee.png" alt="trophee"></div>
     <div class="bravo" *ngIf="!statVis && commun.recordBattu">BRAVO!!! RECORD BATTU !!</div>
 
     <div *ngIf="statVis" class="stat">

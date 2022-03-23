@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommunService } from './../../services/commun.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -11,11 +11,16 @@ export class ThemeComponent implements OnInit {
 
   constructor(
     public commun: CommunService,
-    private router: Router
+    private router: Router,
+    private ar : ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    
+    if(!this.commun.idu){
+       this.ar.paramMap.subscribe((params: any) => {
+      this.commun.idu = params.get('id');
+   });
+    } 
   }
 
   n=0;
@@ -45,7 +50,7 @@ export class ThemeComponent implements OnInit {
     this.commun.theme = this.choix;
     document.querySelector('.choix')!.classList.toggle('vert');
    setTimeout(() => {
-     this.router.navigate(['/challenge']);
+     this.router.navigate([`/challenge/${this.commun.idu}`]);
    }, 600); 
   }
 

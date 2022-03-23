@@ -31,4 +31,73 @@
     width: auto;
     height: 20vh;
 }
+img[alt='trophee']{
+    height: 25vh; width: auto;
+    animation: agiter 1s linear ;
+    animation-iteration-count: 3;
+}
 
+@keyframes agiter{
+    0%{
+        transform: rotateZ(0);
+        }
+        5%{
+            transform: rotateZ(-15deg);
+        }
+        10%{
+          
+            transform: rotateZ(15deg);
+        }
+        15%{
+            transform: rotateZ(-15deg);
+        }
+        20%{
+          
+            transform: rotateZ(15deg);
+        }
+        25%{
+            transform: rotateZ(-15deg);
+        }
+        30%{
+          
+            transform: rotateZ(15deg);
+        }
+        35%{
+            transform: rotateZ(-10deg);
+        }
+        40%{
+            transform: rotateZ(10deg);
+        }
+        
+        45%{
+            transform: rotateZ(-10deg);
+        }
+        50%{
+            transform: rotateZ(10deg);
+        }
+        
+        55%{
+            transform: rotateZ(-10deg);
+        }
+        60%{
+            transform: rotateZ(10deg);
+        }
+        65%{
+            transform: rotateZ(-6deg);
+        }
+        70%{
+            transform: rotateZ(6deg);
+        }
+        75%{
+            transform: rotateZ(-6deg);
+        }
+        80%{
+            transform: rotateZ(6deg);
+        }
+        
+        85%,100%{
+            transform: rotateZ(0);
+        
+        }
+
+}

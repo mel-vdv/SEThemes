@@ -1,5 +1,5 @@
 import { CommunService } from 'src/app/services/commun.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -11,10 +11,15 @@ export class ChallengeComponent implements OnInit {
 
   constructor(
     private router : Router ,
-    public commun : CommunService
+    public commun : CommunService,
+    private ar : ActivatedRoute
   ) { }
   ngOnInit(): void {
-    
+    if(!this.commun.idu){
+      this.ar.paramMap.subscribe((params: any) => {
+     this.commun.idu = params.get('id');
+  });
+   }
   }
 
   n=0;
@@ -36,14 +41,14 @@ export class ChallengeComponent implements OnInit {
 
   }
   retour(){
-    this.router.navigate(['/theme']);
+    this.router.navigate([`/theme/${this.commun.idu}`]);
   }
 
   choisir(){
     document.querySelector('.choix')!.classList.toggle('vert');
   this.commun.mode = this.choix;
    setTimeout(() => {
-     this.router.navigate(['/jeu']);
+     this.router.navigate([`/jeu/${this.commun.idu}`]);
    }, 600); 
   }
 

@@ -14,7 +14,8 @@
 
   <div class="jeu">
     <div *ngFor="let carte of commun.douze">
-      <div  (click)="select(carte.perso)" class="{{carte.classe}}"><img src="./../../../assets/{{commun.theme}}/{{carte.perso}}.png" alt=""></div>   
+      <div *ngIf="carte.perso && carte.perso !== undefined && carte.perso !== 'null'"  (click)="select(carte.perso)" class="{{carte.classe}}"><img src="./../../../assets/{{commun.theme}}/{{carte.perso}}.png" alt=""></div>   
+      <div *ngIf="!carte.perso || carte.perso == undefined || carte.perso == 'null'" class="case vide"></div>
     </div>
   </div>
   <!------------------------------------------------------------------------------------------------------------>
