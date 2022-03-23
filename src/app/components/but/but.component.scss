@@ -1,0 +1,26 @@
+.container{
+    width: 100vw;height: 100vh;
+    top:0px;left:0px; position:absolute;
+    display: flex;
+    flex-direction: column;align-items: center;
+   //background-color: #c4fffd;
+   background-color: #46abe8;
+}
+img{
+    width: auto;
+    height: 8vh;
+}
+.explication{
+width: 80%;
+color: #46abe8;
+font-weight: bold;
+font-size: 2.8vh;
+height: 40vh;
+padding: 5vw;
+background-color: white;
+border: rgb(230,40,100) 1vw solid;
+border-radius: 5vw;
+}
+img[alt='retour']{
+    width: 5vh;
+}
