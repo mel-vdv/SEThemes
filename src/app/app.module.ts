@@ -17,6 +17,10 @@ import { JeuComponent } from './components/jeu/jeu.component';
 import { HomeComponent } from './components/home/home.component';
 import { FinComponent } from './components/fin/fin.component';
 import { environment } from '../environments/environment';
+import { BienvenueComponent } from './components/bienvenue/bienvenue.component';
+import { NiveauComponent } from './components/niveau/niveau.component';
+import { ChallengeComponent } from './components/challenge/challenge.component';
+import { ButComponent } from './components/but/but.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import { environment } from '../environments/environment';
     ThemeComponent,
     JeuComponent,
     HomeComponent,
-    FinComponent
+    FinComponent,
+    BienvenueComponent,
+    NiveauComponent,
+    ChallengeComponent,
+    ButComponent
   ],
   imports: [
     BrowserModule,

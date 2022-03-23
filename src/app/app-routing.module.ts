@@ -1,3 +1,4 @@
+import { BienvenueComponent } from './components/bienvenue/bienvenue.component';
 import { FinComponent } from './components/fin/fin.component';
 import { HomeComponent } from './components/home/home.component';
 import { JeuComponent } from './components/jeu/jeu.component';
@@ -6,7 +7,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  {path:"", component:HomeComponent},
+  {path:"", component:BienvenueComponent},
   {path:'jeu', component:JeuComponent},
   {path:'theme', component:ThemeComponent},
   {path:'fin',component:FinComponent}]

@@ -1,7 +1,8 @@
 <div class="container">
 
-    <div id="intro" *ngIf="commun.idu"> Choisis ton challenge :</div>
     <div *ngIf="!commun.idu" (click)="authGoogle()">CONNEXION</div>
+
+    
     <div *ngIf="commun.idu" (click)="mode(1)"> 10 SETS</div>
     <div *ngIf="commun.idu" (click)="mode(2)"> 3 MINUTES</div>
 </div>

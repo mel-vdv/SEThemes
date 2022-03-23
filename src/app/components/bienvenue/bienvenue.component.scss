@@ -1,0 +1,81 @@
+.container{
+    width: 100vw;height: 100vh;
+    top:0px;left:0px; position:absolute;
+    display: flex;
+    flex-direction: column;
+   background-color: #c4fffd;
+}
+
+.but, .jouer{
+    width: 100vw;
+   
+    display: flex; align-items: center; justify-content: center;
+}
+.but div{
+    height: 10vh;
+    width: 75vw;
+    opacity: 0.5;
+}
+.jouer div{
+    margin-top: 5vw;
+    height: 20vh;
+    width: 85vw;
+}
+
+.jouer div, .but div{
+    border-radius: 5vw;
+    background-color:#46abe8;
+    overflow: hidden;
+    transition: transform 1s;
+    display: flex; align-items: center; justify-content: center;
+}
+.jouer div:active, .but div:active{
+    transform: scale(0.8);
+}
+
+///////////////////////////////
+.jouer img, .but img{
+    width: 90%;
+    padding: auto;
+    height: auto;
+}
+img[alt='banderolle']{
+width: 286vw; height: auto;
+
+}
+
+.gauche{
+   
+    animation: gauche 10s linear infinite;
+}
+.droite{
+   position: relative; left: -286vw;
+    animation: droite 13.5s linear infinite;
+}
+.deux {
+    animation-delay: 2s;
+}
+.trois {
+    animation-delay: 3s;
+}
+.quatre{
+    animation-delay: 4s;
+}
+@keyframes gauche{
+ 0%{
+     
+ transform: translateX(0);
+ }
+ 100%{
+    
+ transform: translateX(-286vw);
+ }
+}
+@keyframes droite{
+    0%{
+    transform: translateX(0);
+    }
+    100%{
+    transform: translateX(386vw);
+    }
+   }

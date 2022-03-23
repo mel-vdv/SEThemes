@@ -13,6 +13,7 @@ export class JeuComponent implements OnInit {
   set = false;
   image = "rien";
   trio!: string[];
+
   //---------------------------------------------------------------------
 
   constructor(
@@ -33,6 +34,7 @@ export class JeuComponent implements OnInit {
     this.commun.enCours = true;
     this.commun.timer = 0;
     this.commun.score = 0;
+    if(this.commun.theme!=='pommes'){
     this.commun.cartes = [
       'r1rb', 'b1rb', 'v1rb',
       'r2rb', 'b2rb', 'v2rb',
@@ -70,6 +72,29 @@ export class JeuComponent implements OnInit {
       this.commun.douze.push({ perso: this.commun.cartes[random], classe: "case" });
       this.commun.cartes.splice(random, 1);
     }
+  
+  }
+    else{
+      this.commun.cartes=[
+        'r1rx','v1rx','b1rx',
+        'r2rx','v2rx','b2rx',
+        'r3rx','v3rx','b3rx',
+        'r1lx','v1lx','b1lx',
+        'r2lx','v2lx','b2lx',
+        'r3lx','v3lx','b3lx',
+        'r1px','v1px','b1px',
+        'r2px','v2px','b2px',
+        'r3px','v3px','b3px'
+      ];
+      this.commun.douze = [];
+      for (let x = 0; x < 9; x++) {
+        let random = Math.floor(Math.random() * this.commun.cartes.length);
+        this.commun.douze.push({ perso: this.commun.cartes[random], classe: "case" });
+        this.commun.cartes.splice(random, 1);
+      }
+
+    }
+   
     if (!this.commun.timerOn) { this.commun.lancerLeTimer(); }
 
   }

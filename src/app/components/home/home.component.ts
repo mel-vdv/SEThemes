@@ -1,6 +1,6 @@
 import { CrudservService } from './../../services/crudserv.service';
 import { CommunService } from './../../services/commun.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AngularFireAuth } from '@angular/fire/compat/auth';
