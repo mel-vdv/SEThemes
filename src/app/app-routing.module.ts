@@ -1,3 +1,4 @@
+import { DuoComponent } from './components/duo/duo.component';
 
 import { ChallengeComponent } from './components/challenge/challenge.component';
 import { ButComponent } from './components/but/but.component';
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path:'challenge/:id', component: ChallengeComponent},
    {path:'theme/:id', component:ThemeComponent},
   {path:'jeu/:id', component:JeuComponent},
+  {path:'duo', component:DuoComponent},
   {path:'fin/:id',component:FinComponent}]
 
 @NgModule({

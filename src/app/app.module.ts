@@ -20,6 +20,7 @@ import { environment } from '../environments/environment';
 import { BienvenueComponent } from './components/bienvenue/bienvenue.component';
 import { ChallengeComponent } from './components/challenge/challenge.component';
 import { ButComponent } from './components/but/but.component';
+import { DuoComponent } from './components/duo/duo.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ButComponent } from './components/but/but.component';
     FinComponent,
     BienvenueComponent,
     ChallengeComponent,
-    ButComponent
+    ButComponent,
+    DuoComponent
   ],
   imports: [
     BrowserModule,
