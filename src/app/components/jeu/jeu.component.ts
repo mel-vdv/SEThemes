@@ -12,8 +12,12 @@ import { CommunService } from 'src/app/services/commun.service';
 export class JeuComponent implements OnInit {
   title = 'ng-setheme';
   set = false;
-  image = "rien";
+
   trio!: string[];
+  classetoile= 'invisible';
+  classerror= 'invisible';
+
+
 
   //---------------------------------------------------------------------
 
@@ -27,14 +31,20 @@ export class JeuComponent implements OnInit {
   ngOnInit(): void {
 
     if (!this.commun.idu) {
-      console.log('jeu : idu inconnu');
+      console.log('(f5) jeu : idu inconnu');
       this.ar.paramMap.subscribe((params: any) => {
         this.commun.idu = params.get('id');
         //on récupère les donnees:
-        this.crud.getId(this.commun.idu).subscribe((data: any) => {
-
+       this.crud.getId(this.commun.idu).subscribe((data: any) => {
+         this.commun.mode = data.mode;
+         this.commun.niveau = data.niveau;
+         this.commun.theme = data.theme;
+         console.log('depuis paramMap: ', this.commun.idu, this.commun.idu, this.commun.niveau, this.commun.mode);
         });
       });
+    }
+    else{
+      console.log('idu/niveau/theme/mode sont déjà connus', this.commun.idu, this.commun.idu, this.commun.niveau, this.commun.mode);
     }
 
     this.trio = [];
@@ -42,6 +52,9 @@ export class JeuComponent implements OnInit {
     if (!this.commun.enCours) {
       console.log('on debute');
       this.debuter();
+    }
+    else{
+      console.log('partie en cours');
     }
   }
   //----------------------------------------------------------------------------
@@ -109,7 +122,7 @@ export class JeuComponent implements OnInit {
   }
   //************************************************************************************ */
   select(carte: string) {
-    this.image = "rien";
+
 
     let index = this.commun.douze.findIndex((element: any) => element.perso === carte);
 
@@ -141,47 +154,60 @@ export class JeuComponent implements OnInit {
       && ((prem[3] === second[3] && prem[3] === troisiem[3]) || (prem[3] !== second[3] && prem[3] !== troisiem[3] && second[3] !== troisiem[3]))
     ) {
       if (triss === this.trio) { 
-        console.log('vous avez un set');
+        this.classetoile= 'etoile';this.classerror="invisible"; setTimeout(() => {
+          this.classetoile='invisible';
+        }, 2000);
+        //console.log('bravo');
         this.gain(); }
       else { 
-        console.log('set détecté..le voici:');
+        //console.log('set détecté..le voici:');
         this.setDetecte = true;
       this.showSolution(triss); }
     }
 //pas de set : 
     else {
-      if (triss === this.trio) {console.log('faux'); this.loose(); }
+      if (triss === this.trio) {this.classetoile= 'invisible';this.classerror="error"; setTimeout(() => {
+        this.classerror='invisible';
+      }, 2000);
+        //console.log('faux'); 
+        this.loose(); }
       else {
-        //est ce la dernière combinaison? 
+        //encore des douze?
+        if(this.commun.douze.length<3){
+          console.log('reste moins de 3 cartes en jeu');
+          this.finish();
+        }
+        else{
+          //est ce la dernière combinaison? 
         //non= le foreach continue
         if(this.dernierCombi){
+          console.log('douze cartes:', this.commun.douze.length);
           //oui : 
         // reste il des cartes à piocher?
         console.log('il reste : ', this.commun.cartes.length, 'cartes à piocher');
         //oui:
         if (this.commun.cartes.length > 2) {
-         console.log('il faut piocher');
-         // this.piocher();
+          console.log('on pioche');
+          this.piocher();
         }
         //non:
         else {
-          console.log('la partie est finie');
-          //this.finish();
+          console.log('finito');
+          this.finish();
         }
         }
-
-       
+        }
       }
     }
   }
   //********************************************************************** */
   gain() {
-    this.image = "etoile";
+ 
     this.set = true;
     this.commun.score! ++;
-    if ((this.commun.mode === '10sets' && this.commun.score === 10 && this.commun.niveau == 2) || (this.commun.mode === '10sets' && this.commun.score === 5 && this.commun.niveau == 1)) {
-      clearInterval(this.commun.tictac); this.commun.timerOn = false;
-      this.commun.enregistrerPartie('10sets');
+    if ((this.commun.mode === '10sets' && this.commun.score === 10 ) || (this.commun.mode === '5sets' && this.commun.score === 5 )) {
+      clearInterval(this.commun.tictac); this.commun.timerOn = false; 
+      this.commun.enregistrerPartie();
       this.router.navigate([`/fin/${this.commun.idu}`]);
       return;
     }
@@ -191,7 +217,7 @@ export class JeuComponent implements OnInit {
   loose() {
     this.trio = [];
     this.set = false;
-    this.image = "error";
+   
     setTimeout(() => {
       this.commun.douze.forEach((element: any) => {
         element.classe = 'case';
@@ -217,8 +243,10 @@ export class JeuComponent implements OnInit {
     this.commun.douze.splice(this.index2, 1, { perso: this.commun.cartes[hasard2], classe: 'case' });
     this.commun.cartes.splice(hasard2, 1);
     this.commun.douze.splice(this.index3, 1, { perso: this.commun.cartes[hasard3], classe: 'case' });
-    this.commun.cartes.splice(hasard3, 1);
-  }
+    this.commun.cartes.splice(hasard3, 1);}
+
+
+  
   //-----------------------------------------
   home() {
     this.commun.enCours = false; this.commun.timerOn = false;
@@ -234,14 +262,17 @@ export class JeuComponent implements OnInit {
   arr12?: string[];
   combiArr:any;
   help() {
+    this.commun.timer= this.commun.timer! + 15;
     this.setDetecte = false; 
     this.dernierCombi=false;
     this.combiArr=  [['']];
     this.arr12 = [];
 
     this.commun.douze.forEach((element: any) => {
-      this.arr12?.push(element.perso);
-      console.log('arr12 = ',JSON.stringify(this.arr12));
+      if(element.perso !== undefined && element.perso!== 'null'){
+        this.arr12?.push(element.perso);
+      }
+      
     });
     //1 tableau des combi : 
     this.arr12.forEach(e1 => {
@@ -260,12 +291,12 @@ export class JeuComponent implements OnInit {
     //2 chercher un set pour chaque combi :
 
     for(let i=0; i<this.combiArr.length; i++){
+
       if(this.setDetecte){
-        console.log('stop,on sort de la boule verify');
         return;
       }
       else{
-        console.log('on verifie ', i);
+        if(i==this.combiArr.length-1){this.dernierCombi=true;}
         this.verifier(this.combiArr[i]);
       }
     }
@@ -273,33 +304,40 @@ export class JeuComponent implements OnInit {
   }
   //--------------------------------------------------
   showSolution(solution:any) {
-    console.log('on montre la solution: ', solution[0], solution[1], solution[2]);
-
     this.commun.douze.filter((e:any)=>{
         if(e.perso===solution[0]||e.perso===solution[1]||e.perso===solution[2]){
          e.classe='case jaune'; 
           }
-        });
-    
+        }); 
   }
   //-------------------------------------------------
   finish() {
+   
     console.log('pas de sets, pas de cartes,fin de partie');
-    clearInterval(this.commun.tictac); this.commun.timerOn = false;
-    this.commun.enregistrerPartie(this.commun.mode!);
-    this.router.navigate([`/fin/${this.commun.idu}`]);
+    clearInterval(this.commun.tictac);
+    this.commun.timerOn = false;
+    this.commun.enregistrerPartie();
+    setTimeout(() => {
+      this.router.navigate([`/fin/${this.commun.idu}`]);
+    }, 2000);
+    
   }
   //-----------------------------------------------
   piocher() {
-    console.log('on pioche');
-    for (let i = 0; i < 3; i++) {
+
+    if(this.commun.cartes.length>2){
+       for (let i = 0; i < 3; i++) {
       let l = this.commun.cartes.length;
-      console.log('l: ', l);
       let n1 = Math.floor((i + 1) * 0.3 * l);
       this.commun.douze.splice(i, 1, { perso: this.commun.cartes[n1], classe: 'case' });
       this.commun.cartes.splice(n1, 1);
     }
-    return;
+    }
+    else{
+this.finish();
+    }
+   
+    
   }
 
 

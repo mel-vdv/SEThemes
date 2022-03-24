@@ -5,7 +5,9 @@
     flex-direction: column;
    background-color: #c4fffd;
 }
-
+.banderolle{
+    height: 40vw;
+}
 .but, .jouer{
     width: 100vw;
    
@@ -54,45 +56,39 @@
     padding: auto;
     height: auto;
 }
+
+ 
+///////////////////////////////////////////////////////////////////@at-root
 img[alt='banderolle']{
-width: 286vw; height: auto;
-
+width:100vw; height: 16vw;
 }
-
+.droite {
+    width: 100vw;  height: 16vw;position: absolute;top: 0vw; left:-100vw;
+    animation: droite 12s linear infinite;
+}   
 .gauche{
-   
-    animation: gauche 10s linear infinite;
+    width: 100vw; height: 16vw;position: absolute;top: 16vw; left:100vw;
+    animation: gauche 12s linear infinite;
 }
-.droite{
-   position: relative; left: -286vw;
-    animation: droite 13.5s linear infinite;
+.bis {
+    animation-delay: 6s;
 }
-.deux {
-    animation-delay: 2s;
-}
-.trois {
-    animation-delay: 3s;
-}
-.quatre{
-    animation-delay: 4s;
-}
-@keyframes gauche{
- 0%{
-     
- transform: translateX(0);
- }
- 100%{
-    
- transform: translateX(-286vw);
- }
-}
-@keyframes droite{
-    0%{
+@keyframes droite {
+   0%{
     transform: translateX(0);
     }
     100%{
-    transform: translateX(386vw);
-    }
-   }
+        transform: translateX(200vw);
+        }
+}
+@keyframes gauche {
+    0%{
+     transform: translateX(0);
+     }
+     100%{
+         transform: translateX(-200vw);
+         }
+ }
+
 
   

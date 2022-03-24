@@ -4,13 +4,14 @@
     <div class="bravo" *ngIf="!statVis && commun.recordBattu">BRAVO!!! RECORD BATTU !!</div>
 
     <div *ngIf="statVis" class="stat">
-        <div *ngIf="commun.mode==='3min'">{{commun.score}} sets en 3 min </div>
-        <div *ngIf="commun.mode==='10sets'">10 sets en {{commun.timer}} sec</div>
+        <div *ngIf="commun.mode==='3min'&&!commun.recordBattu">{{commun.score}} sets en 3 min </div>
+        <div *ngIf="commun.mode==='10sets'&& !commun.recordBattu">10 sets en {{commun.timer}} sec</div>
         <div *ngIf="!commun.recordBattu">Votre record du {{commun.recordD | date:'shortDate'}} :</div>
-        <div *ngIf="commun.mode==='3min' && !commun.recordBattu">{{commun.sets}} sets en 3 min </div>
-        <div *ngIf="commun.mode==='10sets' && !commun.recordBattu">10 sets en {{commun.secs}} sec</div>
+        <div *ngIf="commun.mode==='3min' && !commun.recordBattu">{{commun.record3m}} sets en 3 min </div>
+        <div *ngIf="commun.mode==='10sets' && !commun.recordBattu">10 sets en {{commun.record10s}} sec</div>
+        <div *ngIf="commun.mode==='5sets' && !commun.recordBattu">5 sets en {{commun.record5s}} sec</div>
         <div>{{commun.totalSets}} sets au total </div>
-        <div>(depuis le {{commun.inscrD | date:'shortDate'}})</div>
+        <div>(depuis le {{commun.inscrD | date:'dd/MMM/YYYY'}})</div>
     </div>
 
     <div *ngIf="!statVis" class="logo" (click)="stat()"><img src="./../../../assets/stat.png" alt="stat"></div>

@@ -1,15 +1,24 @@
 <div class="container">
-    <div class="gauche un">
-        <img src="./../../../assets/bandeau.png" alt="banderolle">
-    </div>
-    <div class="droite un">
-        <img src="./../../../assets/bandeaud.png" alt="banderolle">
-    </div>
-    <div class="gauche trois">
-        <img src="./../../../assets/bandeau.png" alt="banderolle">
+    <div class="banderolle">
+
+    <div class="droite">
+        <img src="./../../../assets/bandeau-a.png" alt="banderolle">
     </div>
 
-    
+    <div class="droite bis">
+        <img src="./../../../assets/bandeau-b.png" alt="banderolle">
+    </div>
+
+    <div class="gauche">
+        <img src="./../../../assets/bandeau-c.png" alt="banderolle">
+    </div>
+
+    <div class="gauche bis">
+        <img src="./../../../assets/bandeau-d.png" alt="banderolle">
+    </div>
+
+    </div>
+
     <div class="but">
         <div (click)="voirRegles()"><img src="./../../../assets/regles.png" alt="regles"></div>
     </div>
@@ -19,17 +28,5 @@
     <div *ngIf="niveauVis" class="choix">
         <div class="choi" (click)="choixNiveau(1)">DEBUTANT</div>
         <div class="choi" (click)="choixNiveau(2)">CONFIRME</div>
-    </div>
-
-
-
-    <div class="droite quatre">
-        <img src="./../../../assets/bandeaud.png" alt="banderolle">
-    </div>
-    <div class="gauche deux">
-        <img src="./../../../assets/bandeau.png" alt="banderolle">
-    </div>
-    <div class="droite deux">
-        <img src="./../../../assets/bandeaud.png" alt="banderolle">
     </div>
 </div>

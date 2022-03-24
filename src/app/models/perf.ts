@@ -4,7 +4,11 @@ export interface Perf {
     email?:string;
     inscrD?:number;
     recordD?:Date;
-    secs?: number;
+
+    record3m?: number;
+    record10s?:number;
+    record5s?:number;
+    
     sets?:number;
     totalSets?:number;
 }

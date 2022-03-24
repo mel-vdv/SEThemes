@@ -1,3 +1,4 @@
+import { CrudservService } from './../../services/crudserv.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommunService } from './../../services/commun.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,8 @@ export class ThemeComponent implements OnInit {
   constructor(
     public commun: CommunService,
     private router: Router,
-    private ar : ActivatedRoute
+    private ar : ActivatedRoute ,
+    private crud: CrudservService
   ) { }
 
   ngOnInit(): void {
@@ -21,15 +23,18 @@ export class ThemeComponent implements OnInit {
       this.commun.idu = params.get('id');
    });
     } 
+    this.listChoix= this.commun.niveau===1? ['normal','bonbons','poissons', 'pommes'] :  ['normal','bonbons', 'bites','poissons'];  
+
+    this.choix =this.listChoix[this.n];
   }
 
   n=0;
-  listChoix= ['normal','bonbons', 'bites','poissons', 'pommes']; 
-  choix =this.listChoix[this.n];
+  listChoix!:string[]; 
+ choix!:string;
 
   haut(){
     if( document.querySelector('.choix')!.className==='choix vert'){ document.querySelector('.choix')!.classList.remove('vert');}
-    if(this.n===4){this.n=-1;} 
+    if(this.n===3){this.n=-1;} 
     this.n ++;
    this.choix = this.listChoix[this.n];
 
@@ -49,6 +54,7 @@ export class ThemeComponent implements OnInit {
   choisir(){
     this.commun.theme = this.choix;
     document.querySelector('.choix')!.classList.toggle('vert');
+    this.crud.majTheme({id: this.commun.idu, theme: this.commun.theme});
    setTimeout(() => {
      this.router.navigate([`/challenge/${this.commun.idu}`]);
    }, 600); 

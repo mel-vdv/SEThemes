@@ -17,8 +17,9 @@ export class CrudservService {
     return this.afs.collection(this.collek).doc(user.uid).set({
       'email':user.email,
       'totalSets':0,
-      'sets':0,
-      'secs':0,
+      'record10s':0,
+      'record5s':0,
+      'record3m':0,
       'inscrD': Date.now(), 
       'recordD':0
     });
@@ -31,10 +32,29 @@ export class CrudservService {
   enregistrer(updatage:any){
     return this.afs.collection(this.collek).doc(updatage.id).update({
     totalSets: updatage.totalSets,
-    sets: updatage.sets ,
-    secs: updatage.secs , 
+    record5s: updatage.record5s ,
+    record10s: updatage.record10s , 
+    record3m: updatage.record3m,
     recordD: updatage.recordD 
     });
   }
   ///////////////////////////////////////////////////////////////////////
+  majNiveau(x:any){
+    return this.afs.collection(this.collek).doc(x.id).update({
+      niveau: x.niveau
+    })
+  }
+  //--------------
+  majTheme(x:any){
+    return this.afs.collection(this.collek).doc(x.id).update({
+      theme: x.theme
+    })
+  }
+  //--------------
+  majMode(x:any){
+    return this.afs.collection(this.collek).doc(x.id).update({
+      mode: x.mode
+    })
+  }
+  //--------------
 }
