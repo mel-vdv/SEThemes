@@ -36,15 +36,15 @@ export class CommunService {
 
   ////////////////////////////////////////////////////////////////////////////----------------------------------------
   enregistrerPartie() {
+    console.log(this.idu);
     this.crud.getId(this.idu).subscribe((data: any) => {
+    
       this.totalSets = data.totalSets;
       this.record10s = data.record10s;
       this.record5s = data.record5s;
       this.record3m = data.record3m;
       this.inscrD = data.inscrD;
-      this.recordD = data.recordD;
-    });
-    //---------------------
+      this.recordD = data.recordD; 
 
     if (!this.recording) {
 
@@ -87,17 +87,24 @@ export class CommunService {
         default: console.log('bibi');
       }
       //--------------
-      let updatage = {
-        id: this.idu,
-        totalSets: this.totalSets + this.score!,
-        record10s: this.record10s,
-        record5s: this.record5s,
-        record3m: this.record3m,
-        recordD: this.recordD
+      let updatage:any = {
+        'id': this.idu,
+        'totalSets': this.totalSets + this.score!,
+        'record10s': this.record10s,
+        'record5s': this.record5s,
+        'record3m': this.record3m,
+        'recordD': this.recordD
       }
       this.crud.enregistrer(updatage);
       this.recording = true;
+      return;
+      
     }
+
+    });
+    //---------------------
+
+
   }
   ////////////////////////////////////////////////////////////////////////////-----------------------------------------
   tictac: any;
@@ -116,9 +123,11 @@ export class CommunService {
         this.htmlSec = sec < 10 ? '0' + sec : sec + '';
       }
       else {
-        clearInterval(this.tictac); this.timerOn = false;
-        if (this.mode == '3min') { this.enregistrerPartie(); }
-        this.router.navigate([`/fin/${this.idu}`]);
+        
+        if (this.mode === '3min') { 
+          clearInterval(this.tictac); this.timerOn = false;
+          this.enregistrerPartie();
+        this.router.navigate([`/fin/${this.idu}`]); }
       }
     }, 1000);
 

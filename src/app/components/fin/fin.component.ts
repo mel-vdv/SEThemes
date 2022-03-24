@@ -19,7 +19,7 @@ export class FinComponent implements OnInit {
 
   ngOnInit(): void {
     this.commun.enCours=false;
-    
+    if(!this.commun.idu){
       this.ar.paramMap.subscribe((params: any) => {
      this.commun.idu = params.get('id'); 
     
@@ -36,6 +36,8 @@ export class FinComponent implements OnInit {
   
    
   });
+    }
+      
 }
   nav(loc:string){
     this.router.navigate([`/${loc}`]);

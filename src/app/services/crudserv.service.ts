@@ -29,13 +29,13 @@ export class CrudservService {
     return this.afs.doc(`${this.collek}/${id}`).valueChanges() as Observable<Perf>;
   }
   //////////////////////////////////////////////////////////////////////
-  enregistrer(updatage:any){
-    return this.afs.collection(this.collek).doc(updatage.id).update({
-    totalSets: updatage.totalSets,
-    record5s: updatage.record5s ,
-    record10s: updatage.record10s , 
-    record3m: updatage.record3m,
-    recordD: updatage.recordD 
+  enregistrer(x:any){
+    return this.afs.collection(this.collek).doc(x.id).update({
+    totalSets: x.totalSets,
+    record5s: x.record5s ,
+    record10s: x.record10s , 
+    record3m: x.record3m,
+    recordD: x.recordD 
     });
   }
   ///////////////////////////////////////////////////////////////////////

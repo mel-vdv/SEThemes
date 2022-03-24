@@ -205,9 +205,10 @@ export class JeuComponent implements OnInit {
  
     this.set = true;
     this.commun.score! ++;
-    if ((this.commun.mode === '10sets' && this.commun.score === 10 ) || (this.commun.mode === '5sets' && this.commun.score === 5 )) {
+    if ((this.commun.mode === '10sets' && this.commun.score === 10 ) || (this.commun.mode === '5sets' && this.commun.score === 5 ) ||
+    (this.commun.douze.length<3 && this.commun.cartes.length<3)) {
       clearInterval(this.commun.tictac); this.commun.timerOn = false; 
-      this.commun.enregistrerPartie();
+      this.commun.enregistrerPartie(); console.log('timer:',this.commun.timer);
       this.router.navigate([`/fin/${this.commun.idu}`]);
       return;
     }
