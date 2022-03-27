@@ -1,0 +1,23 @@
+<div class="container">
+
+    <div *ngIf=""><img src="./../../../assets/trophee.png" alt="trophee"></div>
+    <div *ngIf="jesuis==maPartie.joueur1 && maPartie.gagnant==maPartie.joueur1">Bravo, vous avez battu {{maPartie.joueur2}} à {{maPartie.score1}}-{{maPartie.score2}}</div>
+    <div *ngIf="jesuis==maPartie.joueur2 && maPartie.gagnant==maPartie.joueur2">Bravo, vous avez battu {{maPartie.joueur1}} à {{maPartie.score2}}-{{maPartie.score1}}</div>
+    <div *ngIf="jesuis==maPartie.joueur1 && maPartie.gagnant==maPartie.joueur2">{{maPartie.joueur2}} vous a battu {{maPartie.score2}}-{{maPartie.score1}}</div>
+    <div *ngIf="jesuis==maPartie.joueur2 && maPartie.gagnant==maPartie.joueur1">{{maPartie.joueur1}} vous a battu {{maPartie.score1}}-{{maPartie.score2}}</div>
+    
+
+    <div *ngIf="statVis" class="stat">
+           mes parties gagnées : ...
+    </div>
+
+    <div *ngIf="!statVis" class="logo" (click)="stat()"><img src="./../../../assets/stat.png" alt="stat"></div>
+
+    <div (click)="nav('')" class="logo"><img src="./../../../assets/home-fin.png" alt="home"></div>
+
+
+    <button (click)="jesuis = maPartie.joueur1">je suis 1</button>
+    
+    <button (click)="jesuis = maPartie.joueur2">je suis 2</button>
+
+</div>

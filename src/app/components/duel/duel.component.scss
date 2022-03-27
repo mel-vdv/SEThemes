@@ -1,0 +1,190 @@
+.container{
+    width:100vw; height: 100vh;
+    position: absolute; top:0px;left:0px;
+}
+//---------------------     haut     -------------------------------
+.haut{
+    height: 20%; width: 100%;
+    background-color: pink;
+    display: flex;
+}
+.nom{
+    display: flex; justify-content: space-around;
+}
+.zone{
+    width: 50%;
+}
+
+.score{
+    text-align: center;
+}
+.co{
+    background-color: green;
+    height: 3vh; width: 3vh;
+}
+.deco{
+    background-color: red;
+    height: 3vh; width: 3vh;
+}
+.etoilerreur{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.etoilerreur img{
+    height: 7vh; width: auto;
+}
+.invisible{
+    display: none;
+}
+.etoile{
+    display: block;
+    animation: briller 0.2s linear;
+    animation-iteration-count: 3;
+}
+.erreur{
+    display: block;
+    animation: agiter 1s linear forwards;
+    animation-iteration-count: 1;
+}
+//-----------------------   buzz    -------------------------------
+.zonebuzz{
+    background-color: aquamarine;
+    width: 100%;
+    height:16vw ;
+    //display: flex; align-items: center; justify-content: center;
+}
+.buzz{
+    border-radius: 100%;
+    height: 16vw;width: 16vw;
+}
+.tas img{
+width: 30vw; height: auto;
+}
+.eteint{
+background-color: grey;
+}
+.orange{
+background-color: orange;
+}
+.rouge{
+    background-color: red;
+}
+.milieu{
+position: relative;
+left: 42vw;
+}
+.droite{
+    position: relative;
+left: 67vw;
+}
+.gauche{
+    position: relative;
+left: 17vw;
+}
+//------------------------------------------------------
+.pub{
+    background-color: green;
+    width: 100%;
+    height: 30%;
+    }
+
+/////////////////////////////////////////////////////////////
+.jeu{
+    width: 100vw;
+    height: 85vw;
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+    flex-wrap: wrap; 
+}
+.case{
+    margin-top: 1.25vw;
+    box-sizing: border-box;
+    background-color: white;
+    //margin:1.5vw;
+    height:20vw;
+    width: 32.5vw;
+    border-radius: 3vw;
+    overflow: hidden;
+    display: flex;justify-content: center; align-items: center;
+}
+.select{
+    border: 1vw solid  orangered;
+}
+
+
+.case img{
+    height:100%;
+    width: 100%;
+}
+@keyframes briller{
+    to{
+           transform: scale(1.8);
+       }
+   }
+
+   @keyframes agiter{
+    0%{
+        transform: rotateZ(0);
+        }
+        5%{
+            transform: rotateZ(-15deg);
+        }
+        10%{
+          
+            transform: rotateZ(15deg);
+        }
+        15%{
+            transform: rotateZ(-15deg);
+        }
+        20%{
+          
+            transform: rotateZ(15deg);
+        }
+        25%{
+            transform: rotateZ(-15deg);
+        }
+        30%{
+          
+            transform: rotateZ(15deg);
+        }
+        35%{
+            transform: rotateZ(-10deg);
+        }
+        40%{
+            transform: rotateZ(10deg);
+        }
+        
+        45%{
+            transform: rotateZ(-10deg);
+        }
+        50%{
+            transform: rotateZ(10deg);
+        }
+        
+        55%{
+            transform: rotateZ(-10deg);
+        }
+        60%{
+            transform: rotateZ(10deg);
+        }
+        65%{
+            transform: rotateZ(-6deg);
+        }
+        70%{
+            transform: rotateZ(6deg);
+        }
+        75%{
+            transform: rotateZ(-6deg);
+        }
+        80%{
+            transform: rotateZ(6deg);
+        }
+        
+        85%,100%{
+            transform: rotateZ(0);
+        
+        }
+        
+    }   

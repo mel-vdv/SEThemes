@@ -109,6 +109,7 @@ export class JeuComponent implements OnInit {
         'r1rs', 'b1rs', 'v1rs',
         'r2rs', 'b2rs', 'v2rs',
         'r3rs', 'b3rs', 'v3rs'
+        
       ];
     }
     this.commun.douze = [];

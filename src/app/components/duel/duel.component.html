@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="haut">
+        <div class="zone joueur un">
+            <div class="nom">
+                <div>{{maPartie.joueur1}} </div>
+                <div class="{{lum1}}"></div>
+            </div>
+            <div class="score">{{maPartie.score1}}</div>
+            <div class="etoilerreur">
+                <img  class="{{maPartie.classetoile1}}" src="./../../../assets/etoile.png" alt="etoile">
+                <img  class="{{maPartie.classerreur1}}"  src="./../../../assets/error.png" alt="erreur">
+            </div>
+        </div>
+
+        <div class="zone tas">
+            <div *ngIf="maPartie.cartes.length>2 && !setDetecte"><img (click)="detecterSet()" src="./../../../assets/tas.png" alt="tas"></div>
+            <div *ngIf="maPartie.cartes.length>2 && setDetecte"><img src="./../../../assets/tasbarre.png" alt="tas"></div>
+
+      
+        </div>
+
+        <div class="zone joueur deux">
+            <div class="nom">
+                {{maPartie.joueur2}}
+                <div class="{{lum2}}"></div>
+            </div>
+            <div class="score">{{maPartie.score2}}</div>
+            <div class="etoilerreur">
+                <img  class="{{maPartie.classetoile2}}" src="./../../../assets/etoile.png" alt="etoile">
+                <img  class="{{maPartie.classerreur2}}"  src="./../../../assets/error.png" alt="erreur">
+            </div>
+
+        </div>
+    </div>
+
+    <div class="zonebuzz">
+        <div class="buzz {{maPartie.colorbuzz}} {{maPartie.posbuzz}}" (click)="buzzer()"></div>
+    </div>
+
+    <div class="jeu">
+        <div *ngFor="let carte of maPartie.douze">
+            <div (click)="select(carte.perso)" class="{{carte.classe}}">
+                <img src="./../../../assets/normal/{{carte.perso}}.png" alt=""></div>
+        </div>
+    </div>
+
+    <div class="pub">
+        <p>je suis le joueur : {{jeSuis}}</p>
+        <button (click)="co(1, true)">connexion 1</button>
+        <button (click)="co(1, false)">deco 1</button>
+        <button (click)="jesuis(1)">je suis 1</button>
+        <br> <br>
+        <button (click)="co(2, true)">connexion 2 </button>
+        <button (click)="co(2, false)">deco 2 </button>
+        <button (click)="jesuis(2)">je suis 2 </button>
+    </div>
+</div>

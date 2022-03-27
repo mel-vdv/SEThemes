@@ -57,4 +57,28 @@ export class CrudservService {
     })
   }
   //--------------
+  //////////////////////////////////////    duo     ///////////////////////////////////////////////////////////////
+newPartie(partie:any){
+    return this.afs.collection('parties').doc(partie.id).set({
+     'joueur1': partie.joueur1, 'joueur2': partie.joueur2,
+     'co1':false, 'co2':false,
+     'score1':0,'score2':0,
+     'classetoile1':'invisible',  'classetoile2':'invisible',  'classerreur1':'invisible',  'classerreur2':'invisible', 
+     'cartes': partie.cartes,
+     'douze':partie.douze,
+     'encours':false,'gagnant':'',
+     'interdit1':false, 'interdit2':false,
+     'buzz':false, 'set1':false,'set2':false, 'colorbuzz':'eteint', 'posbuzz':'milieu',
+     
+    });
+  }
+  //-----------------------
+  getPartieId(idpartie:any){
+    return this.afs.doc(`parties/${idpartie}`).valueChanges() as Observable<Perf>;
+  }
+  //-----------------------
+  updateqqch(idpartie:string, objet:any){
+    return this.afs.doc(`parties/${idpartie}`).update(objet);
+  }
+
 }
