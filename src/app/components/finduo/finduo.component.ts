@@ -27,6 +27,8 @@ jesuis= 'joueur1';
       this.crud.getPartieId(this.idpartie).subscribe((data: any) => {
         this.maPartie = data;
       });
+
+      
     });
   } 
 //-----------
@@ -38,4 +40,12 @@ this.statVis=true;
 nav(loc:string){
   this.router.navigate(["/"]);
 }
+//----------
+gains$=[];
+voirGains(){ //renvoie un tableau
+  this.crud.getAllGains().subscribe((data:any)=>{
+ console.log(JSON.stringify(data));
+  });
+}
+
 }

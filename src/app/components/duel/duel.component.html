@@ -12,11 +12,12 @@
             </div>
         </div>
 
-        <div class="zone tas">
-            <div *ngIf="maPartie.cartes.length>2 && !setDetecte"><img (click)="detecterSet()" src="./../../../assets/tas.png" alt="tas"></div>
-            <div *ngIf="maPartie.cartes.length>2 && setDetecte"><img src="./../../../assets/tasbarre.png" alt="tas"></div>
-
-      
+        <div class="zone">
+            <div class="tas">
+                <div *ngIf="maPartie.cartes.length>2 && !setDetecte"><img (click)="detecterSet()" src="./../../../assets/tas.png" alt="tas"></div>
+                <div *ngIf="maPartie.cartes.length>2 && setDetecte"><img src="./../../../assets/tasbarre.png" alt="tas"></div>
+            </div>
+            <div *ngIf="timerVis" class="timer">{{timer}}</div>
         </div>
 
         <div class="zone joueur deux">

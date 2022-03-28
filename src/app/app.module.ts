@@ -23,6 +23,7 @@ import { ButComponent } from './components/but/but.component';
 import { DuoComponent } from './components/duo/duo.component';
 import { DuelComponent } from './components/duel/duel.component';
 import { FinduoComponent } from './components/finduo/finduo.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { FinduoComponent } from './components/finduo/finduo.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebase),
     provideFirebaseApp(() => initializeApp(environment.firebase)),

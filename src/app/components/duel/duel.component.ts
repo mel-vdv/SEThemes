@@ -42,17 +42,14 @@ export class DuelComponent implements OnInit {
 
   //-*********************
   // TEMPS REEL : VALUE CHANGE ET SUBSCRIPTION !!!
-  ngOnInit(): void {
-    this.setDetecte=false;
-    console.log('ng on init');
-    // on récupère la partie à partir du param url:
+  async ngOnInit() {
+    this.setDetecte = false;
     this.ar.paramMap.subscribe((params: any) => {
       this.idpartie = params.get('id');
-      // de là on récupère les info de la partie créée:
       this.crud.getPartieId(this.idpartie).subscribe((data: any) => {
         this.maPartie = data;
         this.lum1 = data.co1 ? 'co' : 'deco'; this.lum2 = data.co2 ? 'co' : 'deco';
-        if(this.maPartie.douze.filter((e:any)=>e.perso==='vide').length===12){this.finish();}
+        if (this.maPartie.douze.filter((e: any) => e.perso === 'vide').length === 12) { this.finish(); return; }
       });
     });
     this.trio = [];
@@ -65,6 +62,7 @@ export class DuelComponent implements OnInit {
     switch (this.maPartie.colorbuzz) {
       case 'rouge': console.log('buzz deja rouge'); break;
       case 'orange':
+        this.goTimer();
         let objet;
         switch (this.maPartie.posbuzz) {
           case 'milieu': objet = this.jeSuis == 1 ? { 'buzz': true, 'interdit2': true, 'colorbuzz': 'rouge', 'posbuzz': 'gauche' } : { 'buzz': true, 'interdit1': true, 'colorbuzz': 'rouge', 'posbuzz': 'droite' }; break;
@@ -82,7 +80,6 @@ export class DuelComponent implements OnInit {
 
   // ETAPE 2 : on clik sur 1 carte : trio[] **********************************************
   select(carte: string) {
-    console.log('clik ,', carte);
     if (this.maPartie.colorbuzz == 'rouge') {
       switch (this.jeSuis) {
         case 1: if (this.maPartie.posbuzz === 'gauche') { this.dotrio(carte); }
@@ -98,25 +95,26 @@ export class DuelComponent implements OnInit {
   // etape 2bis : on fait un trio:**************************************************************
 
   dotrio(carte: string) {
-  if(carte!=='vide'){  
-    let index = this.maPartie.douze.findIndex((element: any) => element.perso === carte);
-
-
-    if (this.maPartie.douze[index].classe !== 'case select') {
-      if (this.trio.length < 3) {
-        this.maPartie.douze[index].classe = 'case select'; this.trio.push(carte);
+    if (carte !== 'vide') {
+      let index = this.maPartie.douze.findIndex((element: any) => element.perso === carte);
+      if (this.maPartie.douze[index].classe !== 'case select') {
+        if (this.trio.length < 3) {
+          this.maPartie.douze[index].classe = 'case select'; this.trio.push(carte);
+          this.crud.updateqqch(this.idpartie, { douze: this.maPartie.douze });
+        }
+        if (this.trio.length === 3) {
+          this.verifier(this.trio!);
+          clearInterval(this.tictac);this.timerVis=false;
+          this.trio = [];
+        }
       }
-      if (this.trio.length === 3) {
-        this.verifier(this.trio!);
-        this.trio = [];
+      else {
+        this.maPartie.douze[index].classe = 'case'; this.trio = this.trio.filter((e: any) => e !== carte);
+        this.crud.updateqqch(this.idpartie, { douze: this.maPartie.douze });
       }
-    }
-    else {
-      this.maPartie.douze[index].classe = 'case'; this.trio = this.trio.filter((e: any) => e !== carte);
-    }
 
-}
-else{console.log('case vide');}
+    }
+    else { console.log('case vide'); }
   }
   // etape 3 = on verifie si c'est un set : gain() ou loose()*********************************
   verifier(triss: any) {
@@ -128,30 +126,36 @@ else{console.log('case vide');}
       && ((prem[2] === second[2] && prem[2] === troisiem[2]) || (prem[2] !== second[2] && prem[2] !== troisiem[2] && second[2] !== troisiem[2]))
       && ((prem[3] === second[3] && prem[3] === troisiem[3]) || (prem[3] !== second[3] && prem[3] !== troisiem[3] && second[3] !== troisiem[3]))
     ) {
-      if(triss==this.trio){
+      if (triss == this.trio) {
         console.log('gagné');
         this.gain();
       }
-      else{
+      else {
         console.log('un set detecté, tas barré');
-        this.setDetecte= true;
+        this.setDetecte = true;
       }
     }
     //pas de set**************
     else {
-      if(triss==this.trio){
+      if (triss == this.trio) {
         console.log('perdu');
-      this.loose();
+        this.loose();
+        for (let i = 0; i < 3; i++) {
+          this.maPartie.douze.forEach((el: any) => {
+            if (el.perso === this.trio[i]) { el.classe = 'case'; }
+          });
+        }
+        this.crud.updateqqch(this.idpartie, { douze: this.maPartie.douze });
       }
-      else{
-        if(this.dernierCombi){
-          this.setDetecte=false;
-         console.log('dernière combi : pas de set détecté');
-          if(this.maPartie.cartes.length<3){
+      else {
+        if (this.dernierCombi) {
+          this.setDetecte = false;
+          console.log('dernière combi : pas de set détecté');
+          if (this.maPartie.cartes.length < 3) {
             console.log('comme pas de cartes : finito');
-             this.finish(); 
+            this.finish();
           }
-          else{
+          else {
             console.log('il reste des cartes: on pioche');
             this.piocher();
           }
@@ -233,38 +237,38 @@ else{console.log('case vide');}
     this.index3 = this.maPartie.douze.findIndex((element: any) => element.perso === this.trio[2]);
     this.trio = [];
 
-    if(this.maPartie.cartes.length>2){
-     
-       let hasard1 = Math.floor(Math.random() * this.maPartie.cartes.length);
-    let hasard2 = Math.floor(Math.random() * (this.maPartie.cartes.length - 1));
-    let hasard3 = Math.floor(Math.random() * (this.maPartie.cartes.length - 2));
+    if (this.maPartie.cartes.length > 2) {
 
-    this.maPartie.douze.splice(this.index1, 1, { perso: this.maPartie.cartes[hasard1], classe: 'case' });
-    this.maPartie.cartes.splice(hasard1, 1);
-    this.maPartie.douze.splice(this.index2, 1, { perso: this.maPartie.cartes[hasard2], classe: 'case' });
-    this.maPartie.cartes.splice(hasard2, 1);
-    this.maPartie.douze.splice(this.index3, 1, { perso: this.maPartie.cartes[hasard3], classe: 'case' });
-    this.maPartie.cartes.splice(hasard3, 1);
+      let hasard1 = Math.floor(Math.random() * this.maPartie.cartes.length);
+      let hasard2 = Math.floor(Math.random() * (this.maPartie.cartes.length - 1));
+      let hasard3 = Math.floor(Math.random() * (this.maPartie.cartes.length - 2));
+
+      this.maPartie.douze.splice(this.index1, 1, { perso: this.maPartie.cartes[hasard1], classe: 'case' });
+      this.maPartie.cartes.splice(hasard1, 1);
+      this.maPartie.douze.splice(this.index2, 1, { perso: this.maPartie.cartes[hasard2], classe: 'case' });
+      this.maPartie.cartes.splice(hasard2, 1);
+      this.maPartie.douze.splice(this.index3, 1, { perso: this.maPartie.cartes[hasard3], classe: 'case' });
+      this.maPartie.cartes.splice(hasard3, 1);
     }
-    else{
+    else {
       console.log('avant : tas vide, on va détecter..');
       this.maPartie.douze.splice(this.index1, 1, { perso: 'vide', classe: 'case' });
       this.maPartie.douze.splice(this.index2, 1, { perso: 'vide', classe: 'case' });
       this.maPartie.douze.splice(this.index3, 1, { perso: 'vide', classe: 'case' });
-    
-      this.detecterSet();
-    }
-   
-    let objet ={ cartes: this.maPartie.cartes, douze: this.maPartie.douze };
 
-    this.crud.updateqqch(this.idpartie, objet).then(()=>{
-        if(this.maPartie.cartes.length<3){
-      console.log('après : tas vide : on va détecter..');
       this.detecterSet();
     }
+
+    let objet = { cartes: this.maPartie.cartes, douze: this.maPartie.douze };
+
+    this.crud.updateqqch(this.idpartie, objet).then(() => {
+      if (this.maPartie.cartes.length < 3) {
+        console.log('après : tas vide : on va détecter..');
+        this.detecterSet();
+      }
     });
 
-  
+
   }
   //----------------------------------
   setDetecte?: boolean;
@@ -273,15 +277,15 @@ else{console.log('case vide');}
   combiArr: any;
   detecterSet() {
     this.setDetecte = false;
-    this.dernierCombi=false;
-    this.combiArr=  [['']];
+    this.dernierCombi = false;
+    this.combiArr = [['']];
     this.arr12 = [];
 
     this.maPartie.douze.forEach((element: any) => {
-      if(element.perso !== 'vide'){
+      if (element.perso !== 'vide') {
         this.arr12?.push(element.perso);
       }
-      
+
     });
     //1 tableau des combi : 
     this.arr12.forEach(e1 => {
@@ -296,32 +300,48 @@ else{console.log('case vide');}
       });
     });
     this.combiArr.shift();
-    
+
     //2 chercher un set pour chaque combi :
 
-    for(let i=0; i<this.combiArr.length; i++){
+    for (let i = 0; i < this.combiArr.length; i++) {
 
-      if(this.setDetecte){
+      if (this.setDetecte) {
         return;
       }
-      else{
-        if(i==this.combiArr.length-1){console.log('dernier combi');this.dernierCombi=true;}
+      else {
+        if (i == this.combiArr.length - 1) { console.log('dernier combi'); this.dernierCombi = true; }
         this.verifier(this.combiArr[i]);
       }
     }
- 
+
   }
   //-------------------------------------
-finish(){
-  console.log('pas de set, pas de cartes : partie finie');
-  if(this.maPartie.score1> this.maPartie.score2){
-    this.crud.updateqqch(this.idpartie, {gagnant: 'joueur1'});
-    console.log('gagnant = joueur1');
+  finish() {
+    console.log('pas de set, pas de cartes : partie finie');
+    if (this.maPartie.score1 > this.maPartie.score2) {
+      this.crud.updateqqch(this.idpartie, { gagnant: 'joueur1' });
+      console.log('gagnant = joueur1');this.router.navigate([`/finduo/${this.idpartie}`]);
+      return;
+    }
+    else {
+      this.crud.updateqqch(this.idpartie, { gagnant: 'joueur2' });
+      console.log('gagnant= joueur2');this.router.navigate([`/finduo/${this.idpartie}`]); 
+    return;     
+    } 
   }
-  else{
-    this.crud.updateqqch(this.idpartie, {gagnant: 'joueur2'});
-    console.log('gagnant= joueur2');
+  //-------------------------------------------
+  timerVis!: boolean;
+  timer!:number;
+  tictac:any;
+  goTimer() {
+    this.timer=10;
+
+    this.tictac = setInterval(()=>{
+       this.timerVis = true;
+      this.timer--;
+      if(this.timer===0){console.log('temps écoulé');clearInterval(this.tictac);this.timerVis=false;this.loose();}
+     
+    },1000);
   }
-  this.router.navigate([`/finduo/${this.idpartie}`]);
-}
+  //------------------------------------------------
 }

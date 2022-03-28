@@ -7,7 +7,8 @@ import { Perf } from '../models/perf';
   providedIn: 'root'
 })
 export class CrudservService {
-
+ monuid= 'RKLqD7tM84NIfRMSkNx2hVKMgMd2';
+ moi= 'mel des bois';
   collek= 'performances';
   constructor(
     private afs: AngularFirestore
@@ -28,7 +29,7 @@ export class CrudservService {
   getId(id:any){
     return this.afs.doc(`${this.collek}/${id}`).valueChanges() as Observable<Perf>;
   }
-  //////////////////////////////////////////////////////////////////////
+  //////////////////////////    PERFORMANCES    ////////////////////////////////////////////
   enregistrer(x:any){
     return this.afs.collection(this.collek).doc(x.id).update({
     totalSets: x.totalSets,
@@ -38,6 +39,10 @@ export class CrudservService {
     recordD: x.recordD 
     });
   }
+    //-------------
+    getAllGains(){
+      return this.afs.collection(`performances/${this.monuid}/gains`).valueChanges() as Observable<any>;
+    }
   ///////////////////////////////////////////////////////////////////////
   majNiveau(x:any){
     return this.afs.collection(this.collek).doc(x.id).update({
@@ -57,7 +62,7 @@ export class CrudservService {
     })
   }
   //--------------
-  //////////////////////////////////////    duo     ///////////////////////////////////////////////////////////////
+  //////////////////////////////////////    PARTIES    ///////////////////////////////////////////////////////////////
 newPartie(partie:any){
     return this.afs.collection('parties').doc(partie.id).set({
      'joueur1': partie.joueur1, 'joueur2': partie.joueur2,
@@ -80,5 +85,48 @@ newPartie(partie:any){
   updateqqch(idpartie:string, objet:any){
     return this.afs.doc(`parties/${idpartie}`).update(objet);
   }
+  ////////////////////////////////////////    MA COLLECTION mb- ///////////////////////////
+  getAmi(ami:any){ //ne marche pas si on écrit pas 'mb-' avant le variable
+    return this.afs.doc(`mb-${this.moi}/${ami}`).valueChanges() as Observable<any>;
+  }
+  //---------
+  getAllAmis(){
+    return this.afs.collection(`mb-${this.moi}`).valueChanges({idField:'pseudo'}) as Observable<any>;
+  }
+  //---------
+  majMaCollek(ami:string, objet:any){
+    return this.afs.doc(`mb-${this.moi}/${ami}`).update(objet); 
+  }
+  //---------
+  majCollekAmi(ami:string, objet:any){
+    return this.afs.doc(`mb-${ami}/${this.moi}`).update(objet); 
+  }
+
+  /////////////////////////////////////////   MEMBRES    /////////////////////////////////////
+  getAllMb(){
+    return this.afs.collection('membres').valueChanges({idField:'pseudo'}) as Observable<any>;
+  }
+  //------
+  getMb(rech:string){
+    return this.afs.collection('membres').doc(rech).valueChanges({idField:'pseudo'}) as Observable<any>;
+  }
+
+//////////////////
+ajouter(ami:string,etat:string){
+  this.afs.collection(`mb-${this.moi}`).doc(ami).set({
+  'statut':'aucun', 'etat': etat, 'pseudo':ami
+  });
+  this.afs.collection(`mb-${ami}`).doc(this.moi).set({
+    'statut':'aucun', 'etat': etat, 'pseudo': this.moi
+    });
+    return;
+}
+//-------------
+inscr(monpseudo:string){
+  return this.afs.collection(`membres`).doc(monpseudo).set({
+    'etat': 'co' ,'idauth': this.monuid, 'pseudo': monpseudo
+    });
+}
+
 
 }
