@@ -9,25 +9,25 @@
     <!--------------------------------------------------------------->
     <div class="inscription" *ngIf="inscrVis">
         <img src="./../../../assets/inscription.png" alt="inscription">
-        <input (click)="annuler1()" type="text" name="monPseudo" [(ngModel)]="monPseudo">
-        <img (click)="enregistrer()" src="./../../../assets/v.png" alt="ok">
+        <input (click)="annuler1()" type="text" name="monPseudo" [(ngModel)]="choixPseudo">
+        <img (click)="sinscrire()" src="./../../../assets/v.png" alt="ok">
     </div>
     <!------------------------------------------------->
     <div class="lien" *ngIf="!inscrVis">
-        Invite tes amis ! Copie-colle l'invitation en cliquant ici : <img (click)="copiercoller()"
-            src="./../../../assets/cc.png" alt="cc"><br>
-        Et envoie leur sur <img src="./../../../assets/fb.png" alt="logo">, <img src="./../../../assets/what.png"
-            alt="logo">, <img src="./../../../assets/insta.png" alt="logo">
-
+        {{monpseudo}}, Invite tes amis ! <br> 
+        Copie-colle l'invitation en cliquant ici : <img (click)="copiercoller()"src="./../../../assets/cc.png" alt="cc"><br>
+        et envoie le lien sur 
+        <a href="https://www.facebook.com/" target="_blank"><img src="./../../../assets/fb.png" alt="logo"></a>
+        ,<a href="https://www.whatsapp.com/?lang=fr" target="_blank"><img src="./../../../assets/what.png" alt="logo"></a>
+        ,<a href="https://www.instagram.com/?hl=fr" target="_blank"><img src="./../../../assets/insta.png" alt="logo"></a>
     </div>
-
     <!---------------------------------------------------------------------------------------------------------------------------------------------------------->
     <div *ngIf="!inscrVis" class="zoneloupe">
         <div class="recherche"><img src="./../../../assets/loupe.png" alt="loupe"><input type="text" name="rech"
                 (click)="annuler2()" [(ngModel)]="rech"><img (click)="rechercher()" src="./../../../assets/v.png"
                 alt="ok">
         </div>
-        <div class="resultat" *ngIf="rechVis">{{resultat.pseudo}}<img (click)="ajouter(resultat.pseudo, resultat.etat)"
+        <div class="resultat" *ngIf="rechVis">{{resultat.pseudo}}<img (click)="ajouter(resultat.pseudo, resultat.idauth, resultat.etat)"
                 src="./../../../assets/ajout.png" alt="plus"></div>
     </div>
     <!----------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -68,7 +68,7 @@
                 <div class="ami">
                     <div class="{{mb.etat}}"></div>
                     <div>{{mb.pseudo}}</div>
-                    <div><img (click)="ajouter(mb.pseudo, mb.etat)" src="./../../../assets/ajout.png" alt="plus">
+                    <div><img (click)="ajouter(mb.pseudo,mb.idauth, mb.etat)" src="./../../../assets/ajout.png" alt="plus">
                     </div>
                 </div>
             </div>

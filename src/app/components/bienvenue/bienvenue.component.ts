@@ -14,74 +14,86 @@ import firebase from 'firebase/compat/app'; //ne marche pas si j'oublie le 'app'
   templateUrl: './bienvenue.component.html',
   styleUrls: ['./bienvenue.component.scss']
 })
-export class BienvenueComponent implements OnInit, OnDestroy {
+export class BienvenueComponent implements OnInit {
 
   constructor(
-    private router : Router,
-    public commun : CommunService,
+    private router: Router,
+    public commun: CommunService,
     private auth: AngularFireAuth,
-    private crud : CrudservService
+    private crud: CrudservService
   ) { }
-  niveauVis= false;
-  result:any;
+  niveauVis = false;
+  result: any;
   user?: User;// (interface fournie par firebase)
   userSub?: Subscription;
-//---------------------------------------------------
+  //---------------------------------------------------
   ngOnInit(): void {
-    console.log("idu:", this.commun.idu);
- if(!this.commun.idu){
-   this.userSub =  this.auth.authState 
-.subscribe((user:any) =>{ 
-this.user = user;
-if(this.user){
-  this.crud.getId(this.user.uid).subscribe((data:any)=>{
-    if(data === undefined || !data){
-      console.log('on cree new user');
-      this.crud.creer(this.user);
-      this.commun.idu = this.user?.uid;
-    }
-    else{
-      this.commun.idu = this.user?.uid; 
-      console.log('IDU',this.commun.idu);
-    }
-  })
-}
-else{
-  console.log('authgoogle');
-       this.authGoogle(); 
-}
-});}
-        
-
+    console.log('ng on init');
   }
-  //-------------------------------------------------
-  async authGoogle(){
-      try{
-      this.result = await this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-      }
-      catch(err){
-      console.error(err);
-      }
-      }
-      //-------------------------------------------
 
-voirRegles(){
-  setTimeout(()=>{
-this.router.navigate([`/but`]);
-  }, 600);
+  //--------------------------------
+
+  voirRegles() {
+    setTimeout(() => {
+      this.router.navigate([`/but`]);
+    }, 600);
+  }
+  //---------------------
+  clickNiveau() {
+    this.niveauVis = true;
+  }
+  choixNiveau(niv: number) {
+    this.commun.niveau = niv;
+    this.crud.majNiveau({ id: this.commun.idu, niveau: this.commun.niveau });
+    this.router.navigate([`/theme/${this.commun.idu}`]);
+    this.userSub?.unsubscribe();
+  }
+  //---------------------
+// DECONNEXION 
+  async deco() {
+    this.userSub?.unsubscribe();
+    return this.auth.signOut().then(() => {
+      console.log('idu deco: ', this.commun.idu);
+    });
+  }
+    //-------------------------------------------------
+//CONNEXION
+    async authGoogle() {
+      return this.auth
+        .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        .then((result) => {
+          console.log('authgoogle:', result);
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+    }
+  //SUIS JE CONNECTE?
+verifConnect(){
+  this.userSub = this.auth.authState
+  .subscribe((user: any) => {
+    this.user = user;
+    if (this.user) {
+      console.log('user déjà connecté');
+      this.crud.getId(this.user.uid).subscribe((data: any) => {
+        if (data === undefined || !data) {
+          console.log('user inconnu dans bdd perf : on cree new user', this.user!.uid);
+          this.crud.creer(this.user);
+          this.commun.idu = this.user!.uid;
+          return;
+        }
+        else {
+          console.log('uid déjà connu dans la bdd performances:', this.user!.uid);
+          this.commun.idu = this.user!.uid;
+          return;
+        }
+      });
+    }
+    else {
+      console.log('pas de user : pas connecté');
+      return;
+    }
+  });
 }
-//---------------------
-clickNiveau(){
-  this.niveauVis= true
-}
-choixNiveau(niv:number){
-  this.commun.niveau = niv;
-  this.crud.majNiveau({id: this.commun.idu, niveau: this.commun.niveau});
-  this.router.navigate([`/theme/${this.commun.idu}`]);
-  this.userSub?.unsubscribe();
-}
-//---------------------
-ngOnDestroy(): void {
-  this.userSub?.unsubscribe();
-}
+
 }

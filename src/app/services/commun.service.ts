@@ -12,7 +12,10 @@ export class CommunService {
     private router: Router,
     public crud: CrudservService
   ) { }
-  idu?: string;
+
+  monpseudo?:string;
+  idu!: string;
+ // idu =  'RKLqD7tM84NIfRMSkNx2hVKMgMd2';
 
   niveau?: number;
 

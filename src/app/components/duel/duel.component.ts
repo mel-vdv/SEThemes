@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudservService } from './../../services/crudserv.service';
 import { Component, OnInit } from '@angular/core';
+import { CommunService } from 'src/app/services/commun.service';
 
 @Component({
   selector: 'app-duel',
@@ -12,51 +13,64 @@ export class DuelComponent implements OnInit {
   constructor(
     private crud: CrudservService,
     private ar: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public commun: CommunService
 
   ) { }
-
+ jeSuis!:number;
   maPartie?: any;
   idpartie!: string;
   // localement : (on envoie rien à firebase)
-  jeSuis!: number;
+
   lebuzzer!: string;
   set!: boolean;
   lum1!: string; lum2!: string;
   trio: any;
-  //***************** */
-  jesuis(joueur: number) {
-    if (joueur == 1) { this.jeSuis = 1; }
-    else { this.jeSuis = 2; }
-  }
-  co(joueur: number, etat: boolean) {
-    let objet;
-    if (joueur == 1) {
-      objet = this.maPartie.co2 && etat ? { 'co1': etat, 'colorbuzz': 'orange', 'posbuzz': 'milieu' } : { 'co1': etat, 'colorbuzz': 'eteint', 'posbuzz': 'milieu' };
-    }
-    else {
-      objet = this.maPartie.co1 && etat ? { 'co2': etat, 'colorbuzz': 'orange', 'posbuzz': 'milieu' } : { 'co2': etat, 'colorbuzz': 'eteint', 'posbuzz': 'milieu' };
-    };
-    this.crud.updateqqch(this.idpartie, objet);
-  }
 
   //-*********************
   // TEMPS REEL : VALUE CHANGE ET SUBSCRIPTION !!!
   async ngOnInit() {
+
     this.setDetecte = false;
+
     this.ar.paramMap.subscribe((params: any) => {
       this.idpartie = params.get('id');
       this.crud.getPartieId(this.idpartie).subscribe((data: any) => {
+      //1/ bdd parties: quel joueur suis-je?  
         this.maPartie = data;
-        this.lum1 = data.co1 ? 'co' : 'deco'; this.lum2 = data.co2 ? 'co' : 'deco';
+        if(this.commun.monpseudo){
+            this.jeSuis = this.commun.monpseudo==data.joueur1? 1: 2;
+            console.log('je suis le joueur '+ this.jeSuis+ '(' + this.commun.monpseudo+')');
+        }
+        else{
+          console.log('merde, monpseudo inconnu');
+        }
         if (this.maPartie.douze.filter((e: any) => e.perso === 'vide').length === 12) { this.finish(); return; }
       });
     });
     this.trio = [];
+  
+    //2/bdd 'membres': gestion des connexions:
+    this.crud.getMb(this.maPartie.joueur1).subscribe((data:any)=>{
+    this.lum1 = data.etat ? 'co' : 'deco'; this.etatBuzzer();
+  
+    });
+    this.crud.getMb(this.maPartie.joueur2).subscribe((data:any)=>{
+      this.lum2 = data.etat ? 'co' : 'deco'; this.etatBuzzer();
+      });
 
   }
 
   //----------------------- LE JEU  CLIK SUR 3 CARTES  ----------------------------
+  //etape 0: couleur du buzzer:
+  etatBuzzer(){
+    if(this.lum1 =='deco' || this.lum2=='deco'){
+      this.maPartie.posbuzz='milieu';this.maPartie.colorbuzz='eteint';
+    }
+    else{
+      this.maPartie.posbuzz='milieu';this.maPartie.colorbuzz='orange';
+    }
+  }
   // etape 1 : on buzz  ******************************************************************
   buzzer() {
     switch (this.maPartie.colorbuzz) {

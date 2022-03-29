@@ -1,21 +1,21 @@
 <div class="container">
     <div class="banderolle">
 
-    <div class="droite">
-        <img src="./../../../assets/bandeau-a.png" alt="banderolle">
-    </div>
+        <div class="droite">
+            <img src="./../../../assets/bandeau-a.png" alt="banderolle">
+        </div>
 
-    <div class="droite bis">
-        <img src="./../../../assets/bandeau-b.png" alt="banderolle">
-    </div>
+        <div class="droite bis">
+            <img src="./../../../assets/bandeau-b.png" alt="banderolle">
+        </div>
 
-    <div class="gauche">
-        <img src="./../../../assets/bandeau-c.png" alt="banderolle">
-    </div>
+        <div class="gauche">
+            <img src="./../../../assets/bandeau-c.png" alt="banderolle">
+        </div>
 
-    <div class="gauche bis">
-        <img src="./../../../assets/bandeau-d.png" alt="banderolle">
-    </div>
+        <div class="gauche bis">
+            <img src="./../../../assets/bandeau-d.png" alt="banderolle">
+        </div>
 
     </div>
 
@@ -24,9 +24,12 @@
     </div>
     <div class="jouer">
         <div *ngIf="!niveauVis" (click)="clickNiveau()"><img src="./../../../assets/jouer.png" alt="game"></div>
-        </div>    
+    </div>
     <div *ngIf="niveauVis" class="choix">
         <div class="choi" (click)="choixNiveau(1)">DEBUTANT</div>
         <div class="choi" (click)="choixNiveau(2)">CONFIRME</div>
     </div>
+    <button (click)="verifConnect()">suis je connecté?</button>
+    <button (click)="authGoogle()">se connecter</button>
+    <button (click)="deco()">me deconnecter</button>
 </div>

@@ -51,10 +51,20 @@ export class ChallengeComponent implements OnInit {
   choisir(){
     document.querySelector('.choix')!.classList.toggle('vert');
   this.commun.mode = this.choix;
-  this.crud.majMode({id: this.commun.idu, mode: this.commun.mode});
-   setTimeout(() => {
-     this.router.navigate([`/jeu/${this.commun.idu}`]);
-   }, 600); 
+
+  if(this.choix==='2players'){
+    setTimeout(() => {
+      this.router.navigate([`/duo/${this.commun.idu}`]);
+    }, 600);
+  }
+  
+     else{
+       this.crud.majMode({id: this.commun.idu, mode: this.commun.mode});
+       setTimeout(() => {this.router.navigate([`/jeu/${this.commun.idu}`]);
+       }, 600);
+         
+     }
+
   }
 
 }
