@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class DuoComponent implements OnInit {
 moi= 'mel des bois';  amis$!:any[]; mb$!:any[];
 monPseudo='Je choisis mon pseudo';
-rech= "Entre le pseudo d'un membre inscrit";
+rech= "Pseudo d'un membre";
 
 //----------------------------------------
   constructor(

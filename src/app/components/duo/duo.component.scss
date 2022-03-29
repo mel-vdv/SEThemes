@@ -8,6 +8,10 @@
     text-transform: capitalize;
     font-weight: 700;
 }
+.border{
+    border-top: white 0.5vw solid;
+    box-shadow: 0 -0.5vw 3vw grey;
+}
 .titre{
     display: flex;align-items: center; justify-content: center;
     height: 8vh;
@@ -17,6 +21,7 @@
     font-size: 7vw;font-weight: bold;
    
 }
+
 .inscription{
     height: 15vh;
 }
@@ -24,18 +29,17 @@
  height: 15vh;
 }
 .zoneloupe{
-height: 15vh;
-background-color: pink;
+    display: block;
+height: 12vh;
 }
 .amis{
-
-height: 30vh;
-background-color: green;
+height: 39vh; overflow: scroll;
 }
 .membres{
-    overflow: scroll;
-    height: 20vh;
-    background-color: yellow;
+    height: 23vh; overflow: scroll;
+}
+.span{
+   height: 3vh;;
 }
 .co{
     margin-left: 3vw;margin-right: 3vw;
