@@ -1,14 +1,15 @@
+
 import { CommunService } from './../../services/commun.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CrudservService } from './../../services/crudserv.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-duo',
   templateUrl: './duo.component.html',
   styleUrls: ['./duo.component.scss']
 })
-export class DuoComponent implements OnInit {
+export class DuoComponent implements OnInit, OnDestroy {
   monpseudo!:string;monidauth!:string;monetat!:string;
 
   amis$!: any[]; mb$!: any[];
@@ -22,35 +23,66 @@ export class DuoComponent implements OnInit {
     public commun: CommunService,
     private ar: ActivatedRoute
   ) { }
+    /////////////
+    @HostListener('window:unload', [ '$event' ]) 
+    unloadHandler() { 
+      this.crud.deco(this.monpseudo);
+    }
+    @HostListener('window:beforeunload', [ '$event' ]) 
+     beforeUnloadHandler() { 
+      this.crud.deco(this.monpseudo);
+     } 
 
   ///////////////////////////////////////////////////////////////////
   ngOnInit(): void {
-
+//0./ id de partie connu?
     if (!this.commun.idu) {
-      console.log('(f5) jeu : idu inconnu');
+      console.log('init duo.ts: idu inconnu, params');
       this.ar.paramMap.subscribe((params: any) => {
         this.commun.idu = params.get('id');
-
+        this.verifPseudo();
+        return;
       });
     }
-    //1. pseudo deja inscrit?-------------------------------------
-    this.crud.getIdauth(this.commun.idu).subscribe((data: any) => {
+    else{
+      console.log('init duo.ts : idu connu');
+      this.verifPseudo();
+      return;
+    }
+   
+
+ }
+ //1. pseudo deja inscrit?-------------------------------------
+ verifPseudo(){
+ let result= this.crud.getIdauth(this.commun.idu).subscribe((data:any) => {
+ 
+    if (data.length > 0 ) {
+      console.log('idauth reconnu dans coll membres: inscrVis=false + "co" ');
       
-      if (data.length > 0) {
-        console.log('idauth reconnu dans coll membres : inscrvis= false;');
-        this.monpseudo = data[0].pseudo; this.monidauth= data[0].idauth; this.monetat=data[0].etat;
-        this.commun.monpseudo = data[0].pseudo;
-        this.inscrVis = false;
-        this.listeAmis();
-        this.listeMb();
-        this.getData();
-      }
-      else {
-        console.log('pas incrit: inscrvis=true')
-        this.inscrVis = true;
-      }
-    });  }
-    //2. les amis:-----------------------------------------------
+      this.monpseudo = data[0].pseudo; this.monidauth= data[0].idauth; this.monetat=data[0].etat;
+      this.commun.monpseudo = data[0].pseudo;
+      //unsubscribe:
+ result.unsubscribe();
+
+      this.inscrVis = false;
+//co :
+     this.crud.co(this.monpseudo);
+
+      this.listeAmis();
+      this.listeMb();
+      this.getData();
+      return;
+    }
+    else {
+      console.log('pas incrit: inscrVis=true')
+      this.inscrVis = true;
+      return;
+    }
+    
+  }); 
+  return;
+ }
+ //2. les amis:-----------------------------------------------
    listeAmis(){ 
    this.crud.getAllAmis(this.monpseudo!).subscribe((data: any) => {
       this.amis$ = data;
@@ -79,7 +111,7 @@ export class DuoComponent implements OnInit {
     //  console.log('depuis paramMap: ', this.commun.idu,',niveau: ', this.commun.niveau, ' ,mode: ', this.commun.mode);
     });
 }
-  /////////////////////////////////////////////////////////////////
+  //////////////////////////////// LES ACTIONS CLICK /////////////////////////////////
   inviter(ami: string) {
     setTimeout(() => {
       this.crud.majMaCollek(this.monpseudo!,ami, { statut: 'defie' });
@@ -88,7 +120,6 @@ export class DuoComponent implements OnInit {
 
   }
   //------------------
-
   repondre(i: number) {
     this.amis$[i].repondreVis = true;
   }
@@ -98,9 +129,8 @@ export class DuoComponent implements OnInit {
     this.amis$[i].repondreVis = false;
   }
   accepter(ami: string, i: number) {
-
     let idpartie = Math.floor(Math.random()*9999999);
-    let douze = [];
+    let douze:any = [];
     let cartes =
       ['r1rb', 'b1rb', 'v1rb',
         'r2rb', 'b2rb', 'v2rb',
@@ -126,17 +156,35 @@ export class DuoComponent implements OnInit {
       cartes: cartes,
       douze: douze
     }).then(() => {
+      console.log('new partie créée');
      // this.amis$[i].repondreVis = true;
-      this.router.navigate([`/duel/${idpartie}`]);
+     //******avant le duel************** */
+  this.commun.maPartie={
+    id: idpartie,
+    joueur1: this.monpseudo,
+    joueur2: ami,
+    cartes: cartes,
+    douze: douze
+  }
+     //********************* */
+
+      this.router.navigate([`/duel/${idpartie}/1`]);
     });
   }
   //-------------------------------------------------
   reprendre(num: string) {
-    setTimeout(() => {
 
-      this.router.navigate([`/duel/${num}`]);
-    }, 1000);
+    this.crud.getPartieId(num).subscribe((data:any)=>{
+      this.commun.maPartie= data;
+      if(data.joueur1==this.commun.monpseudo){
 
+ this.router.navigate([`/duel/${num}/1`]);
+  }
+   else{
+ 
+    this.router.navigate([`/duel/${num}/2`]);
+  }
+    });
   }
   //------------
   ajouter(pseudo: string,  idauth:string, etat: string) {
@@ -157,14 +205,15 @@ export class DuoComponent implements OnInit {
     this.rechVis = false;
   }
   //------------
-
   sinscrire() {
     if ((this.mb$.slice().filter(e => e.pseudo === this.choixPseudo)).length > 0) {
       this.choixPseudo = 'désolé, pseudo déjà pris';
     }
     else {  //2/ on enregistre 
       this.inscrVis = false;
-      this.crud.inscr(this.choixPseudo, this.commun.idu);
+      this.crud.inscr(this.choixPseudo, this.commun.idu).then(()=>{
+      this.crud.co(this.choixPseudo);
+      });
     }
   }
   //-----------------------
@@ -187,4 +236,9 @@ export class DuoComponent implements OnInit {
     navigator.clipboard.writeText("Salut, je t'invite à me défier au jeu Set, rejoins-moi sur https://setheme-69d4d.firebaseapp.com/");
 
   }
+  //-----------
+
+async ngOnDestroy(){
+await this.crud.deco(this.monpseudo!);
+}
 }

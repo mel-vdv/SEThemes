@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable} from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app'; // GROSSE GALERE 
@@ -7,11 +7,12 @@ import { Perf } from '../models/perf';
   providedIn: 'root'
 })
 export class CrudservService {
-// monuid= 'RKLqD7tM84NIfRMSkNx2hVKMgMd2';
 
   constructor(
     private afs: AngularFirestore
-  ) { }
+    
+  ) {}
+
 ////////////////////////////////////////////////////////////////////
   creer(user:any){
     return this.afs.collection('performances').doc(user.uid).set({
@@ -63,28 +64,38 @@ export class CrudservService {
   //--------------
   //////////////////////////////////////    PARTIES    ///////////////////////////////////////////////////////////////
 newPartie(partie:any){
-    return this.afs.collection('parties').doc(partie.id).set({
-     'joueur1': partie.joueur1, 'joueur2': partie.joueur2,
+  console.log('on créée');
+    return this.afs.collection('parties').doc(`n-${partie.id}`).set({
+     joueur1: partie.joueur1, joueur2: partie.joueur2,
      //'co1':false, 'co2':false,
-     'score1':0,'score2':0,
-     'classetoile1':'invisible',  'classetoile2':'invisible',  'classerreur1':'invisible',  'classerreur2':'invisible', 
-     'cartes': partie.cartes,
-     'douze':partie.douze,
-     'encours':false,'gagnant':'','colorbuzz':'eteint', 'posbuzz':'milieu',
+     score1:0,score2:0,
+     classetoile1:'invisible',  classetoile2:'invisible',  classerreur1:'invisible',  classerreur2:'invisible', 
+     cartes: partie.cartes,
+     douze:partie.douze,
+     encours:false,gagnant:'',colorbuzz:'eteint', posbuzz:'milieu',
 
   
-     'interdit1':false, 'interdit2':false,
-     'buzz':false, 'set1':false,'set2':false, 
+     interdit1:false, interdit2:false,
+     buzz:false,set1:false,set2:false, 
      
     });
   }
   //-----------------------
   getPartieId(idpartie:any){
-    return this.afs.doc(`parties/${idpartie}`).valueChanges() as Observable<Perf>;
+    return this.afs.doc(`parties/n-${idpartie}`).valueChanges() as Observable<Perf>;
   }
   //-----------------------
   updateqqch(idpartie:string, objet:any){
-    return this.afs.doc(`parties/${idpartie}`).update(objet);
+    return this.afs.doc(`parties/n-${idpartie}`).update(objet);
+  }
+  //------------------------
+ 
+  coDuel1(idpartie:string, etat:boolean){
+    return this.afs.doc(`parties/n-${idpartie}`).update({co1:etat});
+  }
+  
+  coDuel2(idpartie:string, etat:boolean){
+    return this.afs.doc(`parties/n-${idpartie}`).update({co2:etat});
   }
   ////////////////////////////////////////    MA COLLECTION mb- ///////////////////////////
   getAmi(monpseudo:string, ami:any){ //ne marche pas si on écrit pas 'mb-' avant le variable
@@ -109,12 +120,25 @@ newPartie(partie:any){
   }
   //------
   getMb(rech:string){
-    return this.afs.collection('membres').doc(rech).valueChanges({idField:'pseudo'}) as Observable<any>;
+    return this.afs.collection('membres').doc(rech).valueChanges() as Observable<any>;
   }
   //-------------
   getIdauth(idauth:string){
    return this.afs.collection('membres', ref=> ref.where('idauth','==',idauth)).valueChanges() as Observable<any>;
   }
+  //---------------
+  deco(monpseudo:string){
+    return this.afs.collection('membres').doc(monpseudo).update({
+      etat:'deco'
+    });
+  }
+  //--------------
+  co(monpseudo:string){
+    return this.afs.collection('membres').doc(monpseudo).update({
+      etat:'co'
+    });
+  }
+  
 
 //////////////////
 ajouter(monpseudo:string, monidauth:string,monetat:string, pseudo:string,idauth:string,etat:string){
@@ -131,7 +155,11 @@ inscr(monpseudo:string, monidauth:string){
   return this.afs.collection(`membres`).doc(monpseudo).set({
     'etat': 'co' ,'idauth': monidauth, 'pseudo': monpseudo
     });
+    
 }
+
+
+
 
 
 }

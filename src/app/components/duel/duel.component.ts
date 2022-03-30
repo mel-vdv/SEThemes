@@ -1,6 +1,7 @@
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudservService } from './../../services/crudserv.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommunService } from 'src/app/services/commun.service';
 
 @Component({
@@ -8,67 +9,90 @@ import { CommunService } from 'src/app/services/commun.service';
   templateUrl: './duel.component.html',
   styleUrls: ['./duel.component.scss']
 })
-export class DuelComponent implements OnInit {
+export class DuelComponent implements OnInit, OnDestroy{
 
   constructor(
     private crud: CrudservService,
     private ar: ActivatedRoute,
     private router: Router,
-    public commun: CommunService
+    public commun: CommunService,
+  
 
   ) { }
- jeSuis!:number;
+  /////////////
+  @HostListener('window:unload', [ '$event' ]) 
+  unloadHandler() { 
+    this.crud.deco(this.monpseudo);
+    if (this.jeSuis == 1) {
+      this.crud.coDuel1(this.idpartie, false);
+    }
+    else {
+      this.crud.coDuel2(this.idpartie, false);
+    }
+  }
+  @HostListener('window:beforeunload', [ '$event' ]) 
+   beforeUnloadHandler() { 
+    this.crud.deco(this.monpseudo);
+    if (this.jeSuis == 1) {
+      this.crud.coDuel1(this.idpartie, false);
+    }
+    else {
+      this.crud.coDuel2(this.idpartie, false);
+    }
+   } 
+  
+  //////////////////
+  jeSuis!: number;
   maPartie?: any;
   idpartie!: string;
+  monpseudo!:string;
   // localement : (on envoie rien à firebase)
-
   lebuzzer!: string;
   set!: boolean;
   lum1!: string; lum2!: string;
   trio: any;
-
   //-*********************
   // TEMPS REEL : VALUE CHANGE ET SUBSCRIPTION !!!
-  async ngOnInit() {
+  //je laisse le async devant on init??
 
-    this.setDetecte = false;
-
-    this.ar.paramMap.subscribe((params: any) => {
-      this.idpartie = params.get('id');
-      this.crud.getPartieId(this.idpartie).subscribe((data: any) => {
-      //1/ bdd parties: quel joueur suis-je?  
-        this.maPartie = data;
-        if(this.commun.monpseudo){
-            this.jeSuis = this.commun.monpseudo==data.joueur1? 1: 2;
-            console.log('je suis le joueur '+ this.jeSuis+ '(' + this.commun.monpseudo+')');
-        }
-        else{
-          console.log('merde, monpseudo inconnu');
-        }
-        if (this.maPartie.douze.filter((e: any) => e.perso === 'vide').length === 12) { this.finish(); return; }
-      });
-    });
+  ngOnInit() {
+   
+    this.maPartie = this.commun.maPartie;
     this.trio = [];
-  
-    //2/bdd 'membres': gestion des connexions:
-    this.crud.getMb(this.maPartie.joueur1).subscribe((data:any)=>{
-    this.lum1 = data.etat ? 'co' : 'deco'; this.etatBuzzer();
-  
-    });
-    this.crud.getMb(this.maPartie.joueur2).subscribe((data:any)=>{
-      this.lum2 = data.etat ? 'co' : 'deco'; this.etatBuzzer();
+    this.setDetecte = false;
+    this.ar.paramMap.subscribe((params: any) => {
+      //0. param url : 
+      this.jeSuis = params.get('j'); 
+      this.idpartie = params.get('id');
+      //1/ quel joueur suis-je? : connexion
+      if (this.jeSuis == 1) {
+      
+        console.log('on init: co 1');
+        
+        this.crud.coDuel1(this.idpartie, true);
+      }
+      else {
+        console.log('on init: co 2');
+        this.crud.coDuel2(this.idpartie, true);
+      }
+      //2/ data de la partie (bdd parties) et co1 et co2 !!
+      this.crud.getPartieId(this.idpartie).subscribe((data: any) => {
+        this.maPartie = data;
+        this.monpseudo= this.jeSuis==1? data.joueur1 : data.joueur2;this.crud.co(this.monpseudo);
+        if (this.maPartie.douze.filter((e: any) => e.perso === 'vide').length === 12) { this.finish(); return; }
+        this.lum1 = data.co1? 'co' : 'deco'; this.lum2 = data.co2? 'co' : 'deco';
+        this.etatBuzzer();
       });
-
+    });
   }
-
   //----------------------- LE JEU  CLIK SUR 3 CARTES  ----------------------------
   //etape 0: couleur du buzzer:
-  etatBuzzer(){
-    if(this.lum1 =='deco' || this.lum2=='deco'){
-      this.maPartie.posbuzz='milieu';this.maPartie.colorbuzz='eteint';
+  etatBuzzer() {
+    if (this.lum1 == 'deco' || this.lum2 == 'deco') {
+      this.maPartie.posbuzz = 'milieu'; this.maPartie.colorbuzz = 'eteint';
     }
-    else{
-      this.maPartie.posbuzz='milieu';this.maPartie.colorbuzz='orange';
+    else {
+      this.maPartie.posbuzz = 'milieu'; this.maPartie.colorbuzz = 'orange';
     }
   }
   // etape 1 : on buzz  ******************************************************************
@@ -91,7 +115,6 @@ export class DuelComponent implements OnInit {
       default: console.log('pb: colorbuzz');
     }
   }
-
   // ETAPE 2 : on clik sur 1 carte : trio[] **********************************************
   select(carte: string) {
     if (this.maPartie.colorbuzz == 'rouge') {
@@ -118,7 +141,7 @@ export class DuelComponent implements OnInit {
         }
         if (this.trio.length === 3) {
           this.verifier(this.trio!);
-          clearInterval(this.tictac);this.timerVis=false;
+          clearInterval(this.tictac); this.timerVis = false;
           this.trio = [];
         }
       }
@@ -334,28 +357,46 @@ export class DuelComponent implements OnInit {
     console.log('pas de set, pas de cartes : partie finie');
     if (this.maPartie.score1 > this.maPartie.score2) {
       this.crud.updateqqch(this.idpartie, { gagnant: 'joueur1' });
-      console.log('gagnant = joueur1');this.router.navigate([`/finduo/${this.idpartie}`]);
+      console.log('gagnant = joueur1'); this.router.navigate([`/finduo/${this.idpartie}`]);
       return;
     }
     else {
       this.crud.updateqqch(this.idpartie, { gagnant: 'joueur2' });
-      console.log('gagnant= joueur2');this.router.navigate([`/finduo/${this.idpartie}`]); 
-    return;     
-    } 
+      console.log('gagnant= joueur2'); this.router.navigate([`/finduo/${this.idpartie}`]);
+      return;
+    }
   }
   //-------------------------------------------
   timerVis!: boolean;
-  timer!:number;
-  tictac:any;
+  timer!: number;
+  tictac: any;
   goTimer() {
-    this.timer=10;
+    this.timer = 10;
 
-    this.tictac = setInterval(()=>{
-       this.timerVis = true;
+    this.tictac = setInterval(() => {
+      this.timerVis = true;
       this.timer--;
-      if(this.timer===0){console.log('temps écoulé');clearInterval(this.tictac);this.timerVis=false;this.loose();}
-     
-    },1000);
+      if (this.timer === 0) { console.log('temps écoulé'); clearInterval(this.tictac); this.timerVis = false; this.loose(); }
+
+    }, 1000);
   }
-  //------------------------------------------------
+
+
+  ///////////////////////////////////////////////////////////////
+
+ async ngOnDestroy() {
+   await this.crud.deco(this.monpseudo);
+   if (this.jeSuis == 1) {
+      
+    console.log('on init: co 1');
+    
+    this.crud.coDuel1(this.idpartie, false);
+  }
+  else {
+    console.log('on init: co 2');
+    this.crud.coDuel2(this.idpartie, false);
+  }
+ }
+
+
 }

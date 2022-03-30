@@ -2,7 +2,7 @@ import { CrudservService } from './../../services/crudserv.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { CommunService } from './../../services/commun.service';
 import { Router } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { User } from 'firebase/auth';
 import { Subscription } from 'rxjs';
 
@@ -14,7 +14,9 @@ import firebase from 'firebase/compat/app'; //ne marche pas si j'oublie le 'app'
   templateUrl: './bienvenue.component.html',
   styleUrls: ['./bienvenue.component.scss']
 })
-export class BienvenueComponent implements OnInit {
+export class BienvenueComponent implements OnInit{
+
+
 
   constructor(
     private router: Router,
@@ -28,8 +30,10 @@ export class BienvenueComponent implements OnInit {
   userSub?: Subscription;
   //---------------------------------------------------
   ngOnInit(): void {
-    console.log('ng on init');
+    console.log('bienv.ts: init');
   }
+
+
 
   //--------------------------------
 
@@ -53,7 +57,8 @@ export class BienvenueComponent implements OnInit {
   async deco() {
     this.userSub?.unsubscribe();
     return this.auth.signOut().then(() => {
-      console.log('idu deco: ', this.commun.idu);
+      
+      console.log(this.commun.idu,' est déconnecté de la bdd membres');
     });
   }
     //-------------------------------------------------
@@ -75,16 +80,22 @@ verifConnect(){
     this.user = user;
     if (this.user) {
       console.log('user déjà connecté');
-      this.crud.getId(this.user.uid).subscribe((data: any) => {
+      let userconnuSub= this.crud.getId(this.user.uid).subscribe((data: any) => {
         if (data === undefined || !data) {
           console.log('user inconnu dans bdd perf : on cree new user', this.user!.uid);
-          this.crud.creer(this.user);
-          this.commun.idu = this.user!.uid;
+          this.crud.creer(this.user).then(()=>{
+             this.commun.idu = this.user!.uid;
+             this.userSub?.unsubscribe();
+             userconnuSub.unsubscribe();
+          });
+         
           return;
         }
         else {
           console.log('uid déjà connu dans la bdd performances:', this.user!.uid);
           this.commun.idu = this.user!.uid;
+          this.userSub?.unsubscribe();
+          userconnuSub.unsubscribe();
           return;
         }
       });
@@ -94,6 +105,8 @@ verifConnect(){
       return;
     }
   });
+  return;
 }
+
 
 }

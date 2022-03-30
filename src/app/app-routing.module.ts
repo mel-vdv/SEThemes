@@ -18,7 +18,7 @@ const routes: Routes = [
    {path:'theme/:id', component:ThemeComponent},
   {path:'jeu/:id', component:JeuComponent},
   {path:'duo/:id', component:DuoComponent},
-  {path:'duel/:id', component: DuelComponent},
+  {path:'duel/:id/:j', component: DuelComponent},
   {path:'fin/:id',component:FinComponent},
 {path: 'finduo/:id',component:FinduoComponent}]
 

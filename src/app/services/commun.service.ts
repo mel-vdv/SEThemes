@@ -15,7 +15,8 @@ export class CommunService {
 
   monpseudo?:string;
   idu!: string;
- // idu =  'RKLqD7tM84NIfRMSkNx2hVKMgMd2';
+  maPartie?:any;
+  
 
   niveau?: number;
 
