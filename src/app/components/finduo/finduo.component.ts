@@ -15,20 +15,19 @@ export class FinduoComponent implements OnInit {
     private crud : CrudservService
   ) { }
 //------------
-idpartie!:string;
-maPartie:any;
-
-jesuis= 'joueur1';
-
+monpseudo!:string;
+mesStat$:any;
+maStatToday:any;
+//-------------------
   ngOnInit(): void {
     this.ar.paramMap.subscribe((params: any) => {
-      this.idpartie = params.get('id');
-      // de là on récupère les info de la partie créée:
-      this.crud.getPartieId(this.idpartie).subscribe((data: any) => {
-        this.maPartie = data;
+      this.monpseudo = params.get('pseudo');
+      // de là on récupère les stat du pseudo : 
+      this.crud.getStat(this.monpseudo).subscribe(data=>{
+        this.mesStat$ = data;
+        this.maStatToday = data.slice().pop();
+    
       });
-
-      
     });
   } 
 //-----------
@@ -37,17 +36,10 @@ stat(){
 this.statVis=true;
 }
 //---------
-nav(loc:string){
+nav(){
   this.router.navigate(["/"]);
 }
 //----------
-/*
-gains$=[];
-voirGains(){ //renvoie un tableau
-  this.crud.getAllGains().subscribe((data:any)=>{
- console.log(JSON.stringify(data));
-  });
-}
-*/
+
 
 }

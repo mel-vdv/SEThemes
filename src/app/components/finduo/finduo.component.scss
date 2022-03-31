@@ -1,0 +1,109 @@
+.container{
+    width:100vw; height: 100vh;
+    position: absolute; top:0px;left:0px;
+    background: linear-gradient(#46abe8,#c4fffd);
+    display: flex;
+    flex-direction: column; align-items: center;
+}
+.trophee{
+    height: 30vh; 
+    animation: agiter 1.4s linear 0s infinite; 
+}
+.trophee img{
+    height: 25vh; width: auto;
+}
+.today{
+    height: 30vh;
+    color: white;
+    font-family: 'Comic Sans MS',sans-serif;
+    font-size: 7vw;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+.logo{
+    height: 20vh;
+}
+.logo img{
+    height: 15vh; width: auto;
+}
+.stat{
+    height: 80vh;
+    overflow: scroll;
+    display: flex;justify-content: center;align-items: center;
+}
+table, tr,td{
+    border:  #00588e solid 1vw;
+}
+td{
+width: 30vw;
+color: white;
+font-family: 'Comic Sans MS',sans-serif;
+font-size: 4vw;
+font-weight: bold;
+text-align: center;
+}
+
+@keyframes agiter{
+    0%{
+        transform: rotateZ(0);
+        }
+        5%{
+            transform: rotateZ(-15deg);
+        }
+        10%{
+          
+            transform: rotateZ(15deg);
+        }
+        15%{
+            transform: rotateZ(-15deg);
+        }
+        20%{
+          
+            transform: rotateZ(15deg);
+        }
+        25%{
+            transform: rotateZ(-15deg);
+        }
+        30%{
+          
+            transform: rotateZ(15deg);
+        }
+        35%{
+            transform: rotateZ(-10deg);
+        }
+        40%{
+            transform: rotateZ(10deg);
+        }
+        
+        45%{
+            transform: rotateZ(-10deg);
+        }
+        50%{
+            transform: rotateZ(10deg);
+        }
+        
+        55%{
+            transform: rotateZ(-10deg);
+        }
+        60%{
+            transform: rotateZ(10deg);
+        }
+        65%{
+            transform: rotateZ(-6deg);
+        }
+        70%{
+            transform: rotateZ(6deg);
+        }
+        75%{
+            transform: rotateZ(-6deg);
+        }
+        80%{
+            transform: rotateZ(6deg);
+        }
+        
+        85%,100%{
+            transform: rotateZ(0);
+        
+        }
+    }

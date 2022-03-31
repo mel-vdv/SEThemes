@@ -10,7 +10,8 @@
 }
 .border{
     border-top: white 0.5vw solid;
-    box-shadow: 0 -0.5vw 3vw grey;
+    border-bottom: grey 0.5vw solid;
+   // box-shadow: 0 -0.5vw 3vw grey;
 }
 .titre{
     display: flex;align-items: center; justify-content: center;
@@ -19,18 +20,19 @@
     color: white;
     font-family: 'Comic Sans MS',sans-serif;
     font-size: 7vw;font-weight: bold;
-   
 }
-
 .inscription{
     height: 15vh;
 }
 .lien{
+ padding-left: 5vw;padding-right: 5vw;
  height: 15vh;
+ 
 }
 .zoneloupe{
     display: block;
 height: 12vh;
+border-bottom: grey solid 0.5vw;
 }
 .amis{
 height: 39vh; overflow: scroll;
@@ -38,10 +40,7 @@ height: 39vh; overflow: scroll;
 .membres{
     height: 23vh; overflow: scroll;
 }
-.span{
-   height: 3vh;
-   color: rgb(83, 83, 83);
-}
+
 .co{
     margin-left: 3vw;margin-right: 3vw;
     background-color: rgb(60,220,100);
@@ -109,3 +108,8 @@ input{
     box-sizing: border-box;
 
 }
+span{
+    height: 3vh;
+    color:#00588e;
+    padding-left: 5vw;
+ }

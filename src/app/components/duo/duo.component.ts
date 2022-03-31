@@ -85,6 +85,8 @@ export class DuoComponent implements OnInit, OnDestroy {
   //3. les amis:-----------------------------------------------
   listeAmis() {
     this.crud.getAllAmis(this.monpseudo!).subscribe((data: any) => {
+      this.amis$ = data;
+      /*
       let tab = data;
       this.amis$ = [];
       tab.forEach((a: any) => {
@@ -97,16 +99,8 @@ export class DuoComponent implements OnInit, OnDestroy {
       });
       this.amis$.forEach(e => {
         e.repondreVis = false;
-      });
-      
-      if (this.amis$) {
-
-        for (let i = 0; i < this.amis$.length; i++) {
-          this.mb$ = this.mb$.filter(e => e.pseudo !== this.amis$[i].pseudo);
-        }
-      }
+      });*/
     });
-
   }
   //2. les membres :-------------------------------------------
   listeMb() {
@@ -114,6 +108,11 @@ export class DuoComponent implements OnInit, OnDestroy {
       this.mb$ = data;
       this.mb$ = this.mb$.filter(e => e.pseudo !== this.monpseudo);
       this.listeAmis();
+        if (this.amis$) {
+        for (let i = 0; i < this.amis$.length; i++) {
+          this.mb$ = this.mb$.filter(e => e.pseudo !== this.amis$[i].pseudo);
+        }
+      }
     });
   }
   //4. on récupère les donnees:--------------------------------
@@ -127,11 +126,8 @@ export class DuoComponent implements OnInit, OnDestroy {
   }
   //////////////////////////////// LES ACTIONS CLICK /////////////////////////////////
   inviter(ami: string) {
-    setTimeout(() => {
       this.crud.majMaCollek(this.monpseudo!, ami, { statut: 'defie' });
       this.crud.majCollekAmi(this.monpseudo!, ami, { statut: 'defiepar' });
-    }, 1000);
-
   }
   //------------------
   repondre(i: number) {

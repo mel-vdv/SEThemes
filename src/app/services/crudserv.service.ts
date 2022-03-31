@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app'; // GROSSE GALERE 
 import { Perf } from '../models/perf';
@@ -161,6 +161,10 @@ inscr(monpseudo:string, monidauth:string){
       scoreadv: scoreadv,
       gain: gain
     });
+  }
+  //------------------------
+  getStat(monpseudo:string){
+    return this.afs.collection(`hist/${monpseudo}/gains`).valueChanges({idField: 'date'});
   }
   //-----------------------------------------------
   deletePartie(num:string){
