@@ -9,43 +9,44 @@ import { CommunService } from 'src/app/services/commun.service';
   templateUrl: './duel.component.html',
   styleUrls: ['./duel.component.scss']
 })
-export class DuelComponent implements OnInit, OnDestroy{
+export class DuelComponent implements OnInit, OnDestroy {
 
   constructor(
     private crud: CrudservService,
     private ar: ActivatedRoute,
     private router: Router,
     public commun: CommunService,
-  
+
 
   ) { }
   /////////////
-  @HostListener('window:unload', [ '$event' ]) 
-  unloadHandler() { 
+  @HostListener('window:unload', ['$event'])
+  unloadHandler() {
     this.crud.deco(this.monpseudo);
     if (this.jeSuis == 1) {
-      this.crud.coDuel1(this.idpartie, false);
+      this.crud.coDuel1(this.maPartie.num, false);
     }
     else {
-      this.crud.coDuel2(this.idpartie, false);
+      this.crud.coDuel2(this.maPartie.num, false);
     }
   }
-  @HostListener('window:beforeunload', [ '$event' ]) 
-   beforeUnloadHandler() { 
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler() {
     this.crud.deco(this.monpseudo);
+    if(!this.finito){
     if (this.jeSuis == 1) {
-      this.crud.coDuel1(this.idpartie, false);
+      this.crud.coDuel1(this.maPartie.num, false);
     }
     else {
-      this.crud.coDuel2(this.idpartie, false);
-    }
-   } 
-  
+      this.crud.coDuel2(this.maPartie.num, false);
+    }}
+  }
+
   //////////////////
-  jeSuis!: number;
+  jeSuis!: number; monpseudo!: string;
   maPartie?: any;
-  idpartie!: string;
-  monpseudo!:string;
+
+
   // localement : (on envoie rien à firebase)
   lebuzzer!: string;
   set!: boolean;
@@ -54,63 +55,101 @@ export class DuelComponent implements OnInit, OnDestroy{
   //-*********************
   // TEMPS REEL : VALUE CHANGE ET SUBSCRIPTION !!!
   //je laisse le async devant on init??
-
   ngOnInit() {
-   
-    this.maPartie = this.commun.maPartie;
     this.trio = [];
     this.setDetecte = false;
-    this.ar.paramMap.subscribe((params: any) => {
-      //0. param url : 
-      this.jeSuis = params.get('j'); 
-      this.idpartie = params.get('id');
-      //1/ quel joueur suis-je? : connexion
-      if (this.jeSuis == 1) {
-      
-        console.log('on init: co 1');
-        
-        this.crud.coDuel1(this.idpartie, true);
-      }
-      else {
-        console.log('on init: co 2');
-        this.crud.coDuel2(this.idpartie, true);
-      }
-      //2/ data de la partie (bdd parties) et co1 et co2 !!
-      this.crud.getPartieId(this.idpartie).subscribe((data: any) => {
-        this.maPartie = data;
-        this.monpseudo= this.jeSuis==1? data.joueur1 : data.joueur2;this.crud.co(this.monpseudo);
-        if (this.maPartie.douze.filter((e: any) => e.perso === 'vide').length === 12) { this.finish(); return; }
-        this.lum1 = data.co1? 'co' : 'deco'; this.lum2 = data.co2? 'co' : 'deco';
-        this.etatBuzzer();
-      });
-    });
-  }
-  //----------------------- LE JEU  CLIK SUR 3 CARTES  ----------------------------
-  //etape 0: couleur du buzzer:
-  etatBuzzer() {
-    if (this.lum1 == 'deco' || this.lum2 == 'deco') {
-      this.maPartie.posbuzz = 'milieu'; this.maPartie.colorbuzz = 'eteint';
+    this.maPartie = this.commun.maPartie;
+
+    //1/ get param/this.commun ?
+    if (this.commun.monpseudo && this.commun.maPartie.num && this.commun.j) {
+      console.log(' On connait : ', this.commun.monpseudo, ' num ', this.commun.maPartie.num, ' joueur ', this.commun.j);
+      this.jeSuis = this.commun.j;
+      this.maPartie.num = this.commun.maPartie.num;
+      this.connexion1ou2();
     }
     else {
-      this.maPartie.posbuzz = 'milieu'; this.maPartie.colorbuzz = 'orange';
+      let par = this.ar.paramMap.subscribe((params: any) => {
+        //0. param url : 
+        this.jeSuis = parseInt(params.get('j')); this.commun.j = this.jeSuis;
+        this.commun.maPartie.num = params.get('id');
+        this.maPartie.num = this.commun.maPartie.num;
+        this.connexion1ou2();
+        par.unsubscribe();
+      });
+    }
+
+  }
+  //-------------------------------------------------------------------------------
+  connexion1ou2() {
+    this.maPartie = this.commun.maPartie;
+    //2/ quel joueur suis-je? : connexion co 1/ co2
+    if (this.commun.j == 1) {
+      console.log('on init: co 1');
+      this.crud.coDuel1(this.maPartie.num, true).then(() => {
+        this.databuzzer();
+      });
+    }
+    else {
+      console.log('on init: co 2');
+      this.crud.coDuel2(this.maPartie.num, true).then(() => {
+        this.databuzzer();
+      });
     }
   }
+  //------------------------------------
+  databuzzer() {
+    //3/ data de la partie (bdd parties)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    this.crud.getPartieId(this.maPartie.num).subscribe((data: any) => {
+      this.maPartie = data;
+      this.commun.maPartie = data;
+      this.lum1 = data.co1 ? 'co' : 'deco';
+      this.lum2 = data.co2 ? 'co' : 'deco';
+      this.etatBuzzer();
+
+      this.monpseudo = this.jeSuis == 1 ? data.joueur1 : data.joueur2;
+      this.crud.co(this.monpseudo);
+      if (this.maPartie.douze.filter((e: any) => e.perso === 'vide').length === 12) { this.finish(); return; }
+    });
+  }
+
+  //4/ couleur du buzzer:
+  etatBuzzer() {
+    if (!this.maPartie.co1 || !this.maPartie.co2) {
+      this.maPartie.posbuzz = 'milieu'; this.maPartie.colorbuzz = 'eteint';
+    }
+    else{
+      this.maPartie.colorbuzz= this.maPartie.buzz? 'rouge': 'orange';
+      switch(this.maPartie.interdit){
+        case 0 : this.maPartie.posbuzz= 'milieu'; break;
+        case 1 : this.maPartie.posbuzz= 'droite'; break;
+        case 2 : this.maPartie.posbuzz= 'gauche'; break;
+        default: console.log('pb interdit 0/1/2?');
+      }
+    }
+  }
+  //////////////////////////////////////////////////////////////////////////////////////
+  //----------------------- LE JEU  CLIK SUR 3 CARTES  ----------------------------
+  ///////////////////////////////////////////////////////////////////////////////////////
+
   // etape 1 : on buzz  ******************************************************************
   buzzer() {
     switch (this.maPartie.colorbuzz) {
       case 'rouge': console.log('buzz deja rouge'); break;
       case 'orange':
+        console.log('buzz orange, on lance le timer');
         this.goTimer();
         let objet;
         switch (this.maPartie.posbuzz) {
-          case 'milieu': objet = this.jeSuis == 1 ? { 'buzz': true, 'interdit2': true, 'colorbuzz': 'rouge', 'posbuzz': 'gauche' } : { 'buzz': true, 'interdit1': true, 'colorbuzz': 'rouge', 'posbuzz': 'droite' }; break;
+          case 'milieu': objet = this.jeSuis == 1 ?
+            { 'buzz': true, 'interdit':2, 'colorbuzz': 'rouge', 'posbuzz': 'gauche' } :
+            { 'buzz': true, 'interdit':1, 'colorbuzz': 'rouge', 'posbuzz': 'droite' }; break;
           case 'droite': objet = this.jeSuis == 1 ? console.log('vous avez pas le droit de buzzer') : { 'buzz': true, 'colorbuzz': 'rouge' }; break;
           case 'gauche': objet = this.jeSuis == 1 ? { 'buzz': true, 'colorbuzz': 'rouge' } : console.log('vous avez pas le droit de buzzer'); break;
           default: console.log('pb: posbuzz');
         }
         if (this.maPartie.posbuzz == 'milieu' ||
           (this.maPartie.posbuzz == 'droite' && this.jeSuis == 2) || (this.maPartie.posbuzz == 'gauche' && this.jeSuis == 1)
-        ) { this.crud.updateqqch(this.idpartie, objet); } break;
+        ) { console.log('on update objet buzzer'); this.crud.updateqqch(this.maPartie.num, objet); } break;
       case 'eteint': console.log('buzz éteint'); break;
       default: console.log('pb: colorbuzz');
     }
@@ -137,7 +176,7 @@ export class DuelComponent implements OnInit, OnDestroy{
       if (this.maPartie.douze[index].classe !== 'case select') {
         if (this.trio.length < 3) {
           this.maPartie.douze[index].classe = 'case select'; this.trio.push(carte);
-          this.crud.updateqqch(this.idpartie, { douze: this.maPartie.douze });
+          this.crud.updateqqch(this.maPartie.num, { douze: this.maPartie.douze });
         }
         if (this.trio.length === 3) {
           this.verifier(this.trio!);
@@ -147,9 +186,8 @@ export class DuelComponent implements OnInit, OnDestroy{
       }
       else {
         this.maPartie.douze[index].classe = 'case'; this.trio = this.trio.filter((e: any) => e !== carte);
-        this.crud.updateqqch(this.idpartie, { douze: this.maPartie.douze });
+        this.crud.updateqqch(this.maPartie.num, { douze: this.maPartie.douze });
       }
-
     }
     else { console.log('case vide'); }
   }
@@ -182,7 +220,7 @@ export class DuelComponent implements OnInit, OnDestroy{
             if (el.perso === this.trio[i]) { el.classe = 'case'; }
           });
         }
-        this.crud.updateqqch(this.idpartie, { douze: this.maPartie.douze });
+        this.crud.updateqqch(this.maPartie.num, { douze: this.maPartie.douze });
       }
       else {
         if (this.dernierCombi) {
@@ -191,6 +229,7 @@ export class DuelComponent implements OnInit, OnDestroy{
           if (this.maPartie.cartes.length < 3) {
             console.log('comme pas de cartes : finito');
             this.finish();
+            return;
           }
           else {
             console.log('il reste des cartes: on pioche');
@@ -207,13 +246,13 @@ export class DuelComponent implements OnInit, OnDestroy{
     switch (this.jeSuis) {
       case 1: objet = {
         'score1': this.maPartie.score1 + 1, 'set1': true, classetoile1: 'etoile',
-        'interdit2': false,
+        'interdit': 0,
         'buzz': false,
         'colorbuzz': 'orange', 'posbuzz': 'milieu'
       }; break;
       case 2: objet = {
         'score2': this.maPartie.score2 + 1, 'set2': true, classetoile2: 'etoile',
-        'interdit1': false,
+        'interdit': 0,
         'buzz': false,
         'colorbuzz': 'orange', 'posbuzz': 'milieu'
       }; break;
@@ -221,32 +260,31 @@ export class DuelComponent implements OnInit, OnDestroy{
       default: console.log('pb: je suis ni joueur 1 ni 2');
     }
 
-    this.crud.updateqqch(this.idpartie, objet);
+    this.crud.updateqqch(this.maPartie.num, objet);
     setTimeout(() => {
-      this.crud.updateqqch(this.idpartie, { classetoile1: 'invisible', classetoile2: 'invisible' });
+      this.crud.updateqqch(this.maPartie.num, { classetoile1: 'invisible', classetoile2: 'invisible' });
     }, 2000);
-
 
   }
   //-----------------------------------------------------------------------------------------------
   loose() {
     switch (this.jeSuis) {
-      case 1: this.crud.updateqqch(this.idpartie, { interdit1: true, interdit2: false, buzz: false, colorbuzz: 'orange', posbuzz: 'droite', classerreur1: 'erreur' });
+      case 1: this.crud.updateqqch(this.maPartie.num, { interdit:1, buzz: false, colorbuzz: 'orange', posbuzz: 'droite', classerreur1: 'erreur' });
         setTimeout(() => {
-          this.crud.updateqqch(this.idpartie, { interdit1: false });
-          if (this.maPartie.colorbuzz == 'orange' && this.maPartie.posbuzz == 'droite') { this.crud.updateqqch(this.idpartie, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
+          this.crud.updateqqch(this.maPartie.num, { interdit:0});
+          if (!this.maPartie.buzz){this.crud.updateqqch(this.maPartie.num, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
         }, 15000);
         setTimeout(() => {
-          this.crud.updateqqch(this.idpartie, { classerreur1: 'invisible' });
+          this.crud.updateqqch(this.maPartie.num, { classerreur1: 'invisible' });
         }, 2000);
         break;
-      case 2: this.crud.updateqqch(this.idpartie, { interdit2: true, interdit1: false, buzz: false, colorbuzz: 'orange', posbuzz: 'gauche', classerreur2: 'erreur' });
+      case 2: this.crud.updateqqch(this.maPartie.num, { interdit:2, interdit1: false, buzz: false, colorbuzz: 'orange', posbuzz: 'gauche', classerreur2: 'erreur' });
         setTimeout(() => {
-          this.crud.updateqqch(this.idpartie, { interdit2: false });
-          if (this.maPartie.colorbuzz == 'orange' && this.maPartie.posbuzz == 'gauche') { this.crud.updateqqch(this.idpartie, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
+          this.crud.updateqqch(this.maPartie.num, { interdit:0});
+          if (!this.maPartie.buzz){ this.crud.updateqqch(this.maPartie.num, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
         }, 15000);
         setTimeout(() => {
-          this.crud.updateqqch(this.idpartie, { classerreur2: 'invisible' });
+          this.crud.updateqqch(this.maPartie.num, { classerreur2: 'invisible' });
         }, 2000);
         break;
       default: console.log('pb loose: je suis ni joueur 1 ni 2');
@@ -295,17 +333,13 @@ export class DuelComponent implements OnInit, OnDestroy{
 
       this.detecterSet();
     }
-
     let objet = { cartes: this.maPartie.cartes, douze: this.maPartie.douze };
-
-    this.crud.updateqqch(this.idpartie, objet).then(() => {
+    this.crud.updateqqch(this.maPartie.num, objet).then(() => {
       if (this.maPartie.cartes.length < 3) {
         console.log('après : tas vide : on va détecter..');
         this.detecterSet();
       }
     });
-
-
   }
   //----------------------------------
   setDetecte?: boolean;
@@ -337,9 +371,7 @@ export class DuelComponent implements OnInit, OnDestroy{
       });
     });
     this.combiArr.shift();
-
     //2 chercher un set pour chaque combi :
-
     for (let i = 0; i < this.combiArr.length; i++) {
 
       if (this.setDetecte) {
@@ -350,19 +382,39 @@ export class DuelComponent implements OnInit, OnDestroy{
         this.verifier(this.combiArr[i]);
       }
     }
-
   }
   //-------------------------------------
+  finito=false;
   finish() {
+    this.crud.deco(this.monpseudo);
+    this.finito = true;
     console.log('pas de set, pas de cartes : partie finie');
     if (this.maPartie.score1 > this.maPartie.score2) {
-      this.crud.updateqqch(this.idpartie, { gagnant: 'joueur1' });
-      console.log('gagnant = joueur1'); this.router.navigate([`/finduo/${this.idpartie}`]);
+      console.log('gagnant = joueur1');
+      //1/ on suppr le doc n-1256534:
+      this.crud.deletePartie(this.maPartie.num);
+      //2/ on enregistre perf/kli/historique/{adv:gain:score:scoreadv:date}
+      this.crud.creerHisto(this.maPartie.joueur1, this.maPartie.joueur2, this.maPartie.score1, this.maPartie.score2, true);
+      this.crud.creerHisto(this.maPartie.joueur2, this.maPartie.joueur1, this.maPartie.score2, this.maPartie.score1, false);
+      //3/ on met à jour les statuts: mb-max et mb-mel : statut : aucun
+      this.crud.majCollekAmi(this.maPartie.joueur1, this.maPartie.joueur2, {statut: 'aucun'});
+      this.crud.majCollekAmi(this.maPartie.joueur2, this.maPartie.joueur1, {statut: 'aucun'});
+      //4/ nav
+     // this.router.navigate([`/finduo/${this.monpseudo}`]);
       return;
     }
     else {
-      this.crud.updateqqch(this.idpartie, { gagnant: 'joueur2' });
-      console.log('gagnant= joueur2'); this.router.navigate([`/finduo/${this.idpartie}`]);
+      console.log('gagnant= joueur2');
+      //1/ on suppr le doc n-1256534:
+      this.crud.deletePartie(this.maPartie.num);
+      //2/ on enregistre perf/kli/historique/{adv:gain:score:scoreadv:date}
+      this.crud.creerHisto(this.maPartie.joueur1, this.maPartie.joueur2, this.maPartie.score1, this.maPartie.score2, false);
+      this.crud.creerHisto(this.maPartie.joueur2, this.maPartie.joueur1, this.maPartie.score2, this.maPartie.score1, true);
+      //3/ on met à jour les statuts: mb-max et mb-mel : statut : aucun
+      this.crud.majCollekAmi(this.maPartie.joueur1, this.maPartie.joueur2, {statut: 'aucun'});
+      this.crud.majCollekAmi(this.maPartie.joueur2, this.maPartie.joueur1, {statut: 'aucun'});
+      //4/
+     // this.router.navigate([`/finduo/${this.monpseudo}`]);
       return;
     }
   }
@@ -372,7 +424,6 @@ export class DuelComponent implements OnInit, OnDestroy{
   tictac: any;
   goTimer() {
     this.timer = 10;
-
     this.tictac = setInterval(() => {
       this.timerVis = true;
       this.timer--;
@@ -380,23 +431,26 @@ export class DuelComponent implements OnInit, OnDestroy{
 
     }, 1000);
   }
-
-
+  //-----------
+  abandonner() {
+    console.log('abandon');
+  
+  }
   ///////////////////////////////////////////////////////////////
+  async ngOnDestroy() {
+    await this.crud.deco(this.monpseudo);
+    if(!this.finito){
+      if (this.jeSuis == 1) {
 
- async ngOnDestroy() {
-   await this.crud.deco(this.monpseudo);
-   if (this.jeSuis == 1) {
-      
-    console.log('on init: co 1');
+      console.log('duel.destroy: co1');
+
+      await this.crud.coDuel1(this.maPartie.num, false);
+    }
+    else {
+      console.log('duel.destroy: co2');
+      await this.crud.coDuel2(this.maPartie.num, false);
+    }
+    }
     
-    this.crud.coDuel1(this.idpartie, false);
   }
-  else {
-    console.log('on init: co 2');
-    this.crud.coDuel2(this.idpartie, false);
-  }
- }
-
-
 }

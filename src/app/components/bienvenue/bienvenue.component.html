@@ -1,25 +1,24 @@
 <div class="container">
     <div class="banderolle">
-
-        <div class="droite">
+        <div class="droite nivun">
             <img src="./../../../assets/bandeau-a.png" alt="banderolle">
         </div>
 
-        <div class="droite bis">
+        <div class="droite bis nivun">
             <img src="./../../../assets/bandeau-b.png" alt="banderolle">
         </div>
 
-        <div class="gauche">
+        <div class="gauche nivdeux">
             <img src="./../../../assets/bandeau-c.png" alt="banderolle">
         </div>
 
-        <div class="gauche bis">
+        <div class="gauche bis nivdeux">
             <img src="./../../../assets/bandeau-d.png" alt="banderolle">
         </div>
-
     </div>
-
-    <div class="but">
+<!--------------------------------------------------------------------------------------------------------------->
+    <div *ngIf="on">
+  <div class="but">
         <div (click)="voirRegles()"><img src="./../../../assets/regles.png" alt="regles"></div>
     </div>
     <div class="jouer">
@@ -29,7 +28,29 @@
         <div class="choi" (click)="choixNiveau(1)">DEBUTANT</div>
         <div class="choi" (click)="choixNiveau(2)">CONFIRME</div>
     </div>
-    <button (click)="verifConnect()">suis je connecté?</button>
-    <button (click)="authGoogle()">se connecter</button>
-    <button (click)="deco()">me deconnecter</button>
+    <div class="onoff" (click)="decoGoogle()"><img src="./../../../assets/off.png" alt="bouton"></div>
+    </div>
+<!--------------------------------------------------------------------------------------------------------------->
+    <div class='onoff' *ngIf="!on">
+        <div class="bouton-on"(click)="authGoogle()"><img src="./../../../assets/on.png" alt="bouton"></div>
+    </div>
+<!--------------------------------------------------------------------------------------------------------------->
+    <div class="banderolle">
+
+        <div class="droite nivtrois">
+            <img src="./../../../assets/bandeau-a.png" alt="banderolle">
+        </div>
+
+        <div class="droite bis nivtrois">
+            <img src="./../../../assets/bandeau-b.png" alt="banderolle">
+        </div>
+
+        <div class="gauche nivquatre">
+            <img src="./../../../assets/bandeau-c.png" alt="banderolle">
+        </div>
+
+        <div class="gauche bis nivquatre">
+            <img src="./../../../assets/bandeau-d.png" alt="banderolle">
+        </div>
+    </div>
 </div>

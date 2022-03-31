@@ -5,8 +5,19 @@
     flex-direction: column;
    background-color: #c4fffd;
 }
+
 .banderolle{
     height: 40vw;
+}
+.onoff{
+    width: 100vw;
+    height:35vw;
+    display: flex;
+    justify-content: center; align-items:center;
+}
+img[alt='bouton']{
+    display: block;
+    width: 25vw;height: auto;
 }
 .but, .jouer{
     width: 100vw;
@@ -63,15 +74,27 @@ img[alt='banderolle']{
 width:100vw; height: 16vw;
 }
 .droite {
-    width: 100vw;  height: 16vw;position: absolute;top: 0vw; left:-100vw;
+    width: 100vw;  height: 16vw;position: absolute;left:-100vw;
     animation: droite 12s linear infinite;
 }   
 .gauche{
-    width: 100vw; height: 16vw;position: absolute;top: 16vw; left:100vw;
+    width: 100vw; height: 16vw;position: absolute; left:100vw;
     animation: gauche 12s linear infinite;
 }
 .bis {
     animation-delay: 6s;
+}
+.nivun{
+top: 0vw; 
+}
+.nivdeux{
+top: 16vw;
+}
+.nivtrois{
+bottom:16vw;
+}
+.nivquatre{
+bottom: 0vw;;
 }
 @keyframes droite {
    0%{

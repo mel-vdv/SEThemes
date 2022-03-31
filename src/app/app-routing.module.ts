@@ -20,7 +20,7 @@ const routes: Routes = [
   {path:'duo/:id', component:DuoComponent},
   {path:'duel/:id/:j', component: DuelComponent},
   {path:'fin/:id',component:FinComponent},
-{path: 'finduo/:id',component:FinduoComponent}]
+{path: 'finduo/:pseudo',component:FinduoComponent}]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

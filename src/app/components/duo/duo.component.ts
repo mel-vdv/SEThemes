@@ -10,12 +10,12 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
   styleUrls: ['./duo.component.scss']
 })
 export class DuoComponent implements OnInit, OnDestroy {
-  monpseudo!:string;monidauth!:string;monetat!:string;
+  monpseudo!: string; monidauth!: string; monetat!: string;
 
   amis$!: any[]; mb$!: any[];
   choixPseudo = 'Je choisis mon pseudo';
   rech = "Pseudo d'un membre";
-  inscrVis=true;
+  inscrVis = true;
   //----------------------------------------
   constructor(
     private crud: CrudservService,
@@ -23,19 +23,19 @@ export class DuoComponent implements OnInit, OnDestroy {
     public commun: CommunService,
     private ar: ActivatedRoute
   ) { }
-    /////////////
-    @HostListener('window:unload', [ '$event' ]) 
-    unloadHandler() { 
-      this.crud.deco(this.monpseudo);
-    }
-    @HostListener('window:beforeunload', [ '$event' ]) 
-     beforeUnloadHandler() { 
-      this.crud.deco(this.monpseudo);
-     } 
+  /////////////
+  @HostListener('window:unload', ['$event'])
+  unloadHandler() {
+    this.crud.deco(this.monpseudo);
+  }
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler() {
+    this.crud.deco(this.monpseudo);
+  }
 
   ///////////////////////////////////////////////////////////////////
   ngOnInit(): void {
-//0./ id de partie connu?
+    //0./ id de partie connu?
     if (!this.commun.idu) {
       console.log('init duo.ts: idu inconnu, params');
       this.ar.paramMap.subscribe((params: any) => {
@@ -44,78 +44,92 @@ export class DuoComponent implements OnInit, OnDestroy {
         return;
       });
     }
-    else{
+    else {
       console.log('init duo.ts : idu connu');
       this.verifPseudo();
-      return;
     }
-   
 
- }
- //1. pseudo deja inscrit?-------------------------------------
- verifPseudo(){
- let result= this.crud.getIdauth(this.commun.idu).subscribe((data:any) => {
- 
-    if (data.length > 0 ) {
-      console.log('idauth reconnu dans coll membres: inscrVis=false + "co" ');
-      
-      this.monpseudo = data[0].pseudo; this.monidauth= data[0].idauth; this.monetat=data[0].etat;
-      this.commun.monpseudo = data[0].pseudo;
-      //unsubscribe:
- result.unsubscribe();
 
-      this.inscrVis = false;
-//co :
-     this.crud.co(this.monpseudo);
+  }
+  //1. pseudo deja inscrit?-------------------------------------
+  verifPseudo() {
+    let result = this.crud.getIdauth(this.commun.idu).subscribe((data: any) => {
 
-      this.listeAmis();
-      this.listeMb();
-      this.getData();
-      return;
-    }
-    else {
-      console.log('pas incrit: inscrVis=true')
-      this.inscrVis = true;
-      return;
-    }
-    
-  }); 
-  return;
- }
- //2. les amis:-----------------------------------------------
-   listeAmis(){ 
-   this.crud.getAllAmis(this.monpseudo!).subscribe((data: any) => {
-      this.amis$ = data;
-    
+      if (data.length > 0) {
+        console.log('idauth reconnu dans coll membres: inscrVis=false + "co" ');
+
+        this.monpseudo = data[0].pseudo; this.monidauth = data[0].idauth; this.monetat = data[0].etat;
+        this.commun.monpseudo = data[0].pseudo;
+
+        //unsubscribe:
+        result.unsubscribe();
+
+        this.inscrVis = false;
+        //co :
+        this.crud.co(this.monpseudo);
+
+        //this.listeAmis();
+        this.listeMb();
+        this.getData();
+        return;
+      }
+      else {
+        console.log('pas incrit: inscrVis=true')
+        this.inscrVis = true;
+        return;
+      }
+
+    });
+    return;
+  }
+  //3. les amis:-----------------------------------------------
+  listeAmis() {
+    this.crud.getAllAmis(this.monpseudo!).subscribe((data: any) => {
+      let tab = data;
+      this.amis$ = [];
+      tab.forEach((a: any) => {
+        this.mb$.forEach(m => {
+          if (a.pseudo == m.pseudo) {
+            a.etat = m.etat;
+            this.amis$.push(a);
+          }
+        });
+      });
       this.amis$.forEach(e => {
         e.repondreVis = false;
-      })
-    });}
-    //3. les membres :-------------------------------------------
-    listeMb(){
+      });
+      
+      if (this.amis$) {
+
+        for (let i = 0; i < this.amis$.length; i++) {
+          this.mb$ = this.mb$.filter(e => e.pseudo !== this.amis$[i].pseudo);
+        }
+      }
+    });
+
+  }
+  //2. les membres :-------------------------------------------
+  listeMb() {
     this.crud.getAllMb().subscribe((data: any) => {
       this.mb$ = data;
       this.mb$ = this.mb$.filter(e => e.pseudo !== this.monpseudo);
-      if(this.amis$){
-
-      for (let i = 0; i < this.amis$.length; i++) {
-        this.mb$ = this.mb$.filter(e => e.pseudo !== this.amis$[i].pseudo);
-      }}
-    });}
-    //4. on récupère les donnees:--------------------------------
-    getData(){
+      this.listeAmis();
+    });
+  }
+  //4. on récupère les donnees:--------------------------------
+  getData() {
     this.crud.getId(this.commun.idu).subscribe((data: any) => {
       this.commun.mode = data.mode;
       this.commun.niveau = data.niveau;
       this.commun.theme = data.theme;
-    //  console.log('depuis paramMap: ', this.commun.idu,',niveau: ', this.commun.niveau, ' ,mode: ', this.commun.mode);
+      //  console.log('depuis paramMap: ', this.commun.idu,',niveau: ', this.commun.niveau, ' ,mode: ', this.commun.mode);
     });
-}
+  }
   //////////////////////////////// LES ACTIONS CLICK /////////////////////////////////
   inviter(ami: string) {
     setTimeout(() => {
-      this.crud.majMaCollek(this.monpseudo!,ami, { statut: 'defie' });
-      this.crud.majCollekAmi(this.monpseudo! ,ami, { statut: 'defiepar' });
+      this.crud.majMaCollek(this.monpseudo!, ami, { statut: 'defie' });
+      this.crud.majCollekAmi(this.monpseudo!, ami, { statut: 'defiepar' });
     }, 1000);
 
   }
@@ -124,13 +138,13 @@ export class DuoComponent implements OnInit, OnDestroy {
     this.amis$[i].repondreVis = true;
   }
   refuser(ami: string, i: number) {
-    this.crud.majMaCollek(this.monpseudo!,ami, { statut: 'aucun' });
-    this.crud.majCollekAmi(this.monpseudo!,ami, { statut: 'aucun' });
+    this.crud.majMaCollek(this.monpseudo!, ami, { statut: 'aucun' });
+    this.crud.majCollekAmi(this.monpseudo!, ami, { statut: 'aucun' });
     this.amis$[i].repondreVis = false;
   }
   accepter(ami: string, i: number) {
-    let idpartie = Math.floor(Math.random()*9999999);
-    let douze:any = [];
+    let idpartie = Math.floor(Math.random() * 9999999);
+    let douze: any = [];
     let cartes =
       ['r1rb', 'b1rb', 'v1rb',
         'r2rb', 'b2rb', 'v2rb',
@@ -147,50 +161,54 @@ export class DuoComponent implements OnInit, OnDestroy {
       cartes.splice(random, 1);
     }
     //---------------------------------------------------
-    this.crud.majMaCollek(this.monpseudo!,ami, { statut: 'play', num: idpartie });
-    this.crud.majCollekAmi(this.monpseudo!,ami, { statut: 'play', num: idpartie });
+    this.crud.majMaCollek(this.monpseudo!, ami, { statut: 'play', num: idpartie });
+    this.crud.majCollekAmi(this.monpseudo!, ami, { statut: 'play', num: idpartie });
     this.crud.newPartie({
-      id: idpartie,
+      num: idpartie,
       joueur1: this.monpseudo,
       joueur2: ami,
       cartes: cartes,
       douze: douze
     }).then(() => {
       console.log('new partie créée');
-     // this.amis$[i].repondreVis = true;
-     //******avant le duel************** */
-  this.commun.maPartie={
-    id: idpartie,
-    joueur1: this.monpseudo,
-    joueur2: ami,
-    cartes: cartes,
-    douze: douze
-  }
-     //********************* */
-
+      // this.amis$[i].repondreVis = true;
+      //******avant le duel************** */
+      this.commun.maPartie = {
+        num: idpartie,
+        joueur1: this.monpseudo,
+        joueur2: ami,
+        cartes: cartes,
+        douze: douze
+      }
+      this.commun.j = 1;
+      //********************* */
       this.router.navigate([`/duel/${idpartie}/1`]);
     });
   }
   //-------------------------------------------------
   reprendre(num: string) {
+    console.log('num', num);
 
-    this.crud.getPartieId(num).subscribe((data:any)=>{
-      this.commun.maPartie= data;
-      if(data.joueur1==this.commun.monpseudo){
-
- this.router.navigate([`/duel/${num}/1`]);
-  }
-   else{
- 
-    this.router.navigate([`/duel/${num}/2`]);
-  }
+    let preparerDuel = this.crud.getPartieId(num).subscribe((data: any) => {
+      this.commun.maPartie = data;
+      console.log('je prepare le duel');
+      if (data.joueur1 == this.monpseudo) {
+        this.commun.j = 1;
+        this.router.navigate([`/duel/${num}/1`]);
+      }
+      else {
+        this.commun.j = 2;
+        this.router.navigate([`/duel/${num}/2`]);
+      }
+      preparerDuel.unsubscribe();
     });
+
   }
   //------------
-  ajouter(pseudo: string,  idauth:string, etat: string) {
-    console.log('ici',this.monpseudo!,this.monidauth!, this.monetat!, pseudo, idauth, etat);
+  ajouter(pseudo: string, idauth: string, etat: string) {
+    console.log('ici', this.monpseudo!, this.monidauth!, this.monetat!, pseudo, idauth, etat);
     setTimeout(() => {
-      this.crud.ajouter(this.monpseudo!,this.monidauth!, this.monetat!, pseudo, idauth, etat); // c'est ici que les collec mb-pseudo entrent en jeu, pas avant
+      this.crud.ajouter(this.monpseudo!, this.monidauth!, this.monetat!, pseudo, idauth, etat); // c'est ici que les collec mb-pseudo entrent en jeu, pas avant
       this.mb$ = this.mb$.filter(e => e.pseudo !== pseudo);
     }, 1000);
 
@@ -211,8 +229,8 @@ export class DuoComponent implements OnInit, OnDestroy {
     }
     else {  //2/ on enregistre 
       this.inscrVis = false;
-      this.crud.inscr(this.choixPseudo, this.commun.idu).then(()=>{
-      this.crud.co(this.choixPseudo);
+      this.crud.inscr(this.choixPseudo, this.commun.idu).then(() => {
+        this.crud.co(this.choixPseudo);
       });
     }
   }
@@ -236,9 +254,9 @@ export class DuoComponent implements OnInit, OnDestroy {
     navigator.clipboard.writeText("Salut, je t'invite à me défier au jeu Set, rejoins-moi sur https://setheme-69d4d.firebaseapp.com/");
 
   }
-  //-----------
 
-async ngOnDestroy(){
-await this.crud.deco(this.monpseudo!);
-}
+  //------------------------
+  async ngOnDestroy() {
+    await this.crud.deco(this.monpseudo!);
+  }
 }

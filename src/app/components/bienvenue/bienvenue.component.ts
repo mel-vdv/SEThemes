@@ -28,9 +28,11 @@ export class BienvenueComponent implements OnInit{
   result: any;
   user?: User;// (interface fournie par firebase)
   userSub?: Subscription;
+  on!:boolean;
   //---------------------------------------------------
   ngOnInit(): void {
-    console.log('bienv.ts: init');
+   console.log('bien.init: on verif la connexion');
+   this.verifConnect();
   }
 
 
@@ -54,10 +56,10 @@ export class BienvenueComponent implements OnInit{
   }
   //---------------------
 // DECONNEXION 
-  async deco() {
+  async decoGoogle() {
     this.userSub?.unsubscribe();
     return this.auth.signOut().then(() => {
-      
+      this.on=false;
       console.log(this.commun.idu,' est déconnecté de la bdd membres');
     });
   }
@@ -68,18 +70,20 @@ export class BienvenueComponent implements OnInit{
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then((result) => {
           console.log('authgoogle:', result);
+          this.on=true;
         })
         .catch((error) => {
           console.error(error.message);
         });
     }
-  //SUIS JE CONNECTE?
+//--------------------------------------------------------------------------------------------
 verifConnect(){
   this.userSub = this.auth.authState
   .subscribe((user: any) => {
     this.user = user;
     if (this.user) {
       console.log('user déjà connecté');
+      this.on= true;
       let userconnuSub= this.crud.getId(this.user.uid).subscribe((data: any) => {
         if (data === undefined || !data) {
           console.log('user inconnu dans bdd perf : on cree new user', this.user!.uid);
@@ -88,24 +92,20 @@ verifConnect(){
              this.userSub?.unsubscribe();
              userconnuSub.unsubscribe();
           });
-         
-          return;
         }
         else {
           console.log('uid déjà connu dans la bdd performances:', this.user!.uid);
           this.commun.idu = this.user!.uid;
           this.userSub?.unsubscribe();
           userconnuSub.unsubscribe();
-          return;
         }
       });
     }
     else {
+          this.on=false;
       console.log('pas de user : pas connecté');
-      return;
     }
   });
-  return;
 }
 
 

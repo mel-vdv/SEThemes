@@ -1,35 +1,44 @@
 .container{
     width:100vw; height: 100vh;
     position: absolute; top:0px;left:0px;
+    background: linear-gradient(#46abe8,#c4fffd);
 }
 //---------------------     haut     -------------------------------
 .haut{
-    height: 20%; width: 100%;
-    background-color: pink;
+    height: 21vh; width: 100%;
+   
     display: flex;
 }
-.nom{
-    display: flex; justify-content: space-around;
+.nom, .score, .etoilerreur {
+    height: 7vh;
+    color: white;
+    font-family: 'Comic Sans MS',sans-serif;
+    font-size: 7vw;font-weight: bold;
+    display: flex; justify-content: center; align-items: center;
+}
+.score{
+    border:#00588e solid 1vw;
+    border-radius: 2vw;
+    box-sizing: border-box;
+    padding: 3vw;
 }
 .zone{
-    width: 50%;
-}
-
-.score{
-    text-align: center;
+    width: 33%; height: 21vh;
+    display: flex; flex-direction:column; align-items: center;
 }
 .co{
-    background-color: green;
-    height: 3vh; width: 3vh;
+    margin-left: 3vw;margin-right: 3vw;
+    background-color: rgb(60,220,100);
+    height: 3vw; width: 3vw;
+    border-radius: 100%;
+    box-shadow: 0px 0px 1vw green,0px 0px 2vw greenyellow,0px 0px 4vw greenyellow;
 }
 .deco{
-    background-color: red;
-    height: 3vh; width: 3vh;
-}
-.etoilerreur{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+    margin-left: 3vw;margin-right: 3vw;
+    background-color:rgb(230,40,100);
+    box-shadow: 0px 0px 1vw red,0px 0px 2vw rgb(245, 107, 107),0px 0px 4vw rgb(245, 107, 107);
+    height: 3vw; width: 3vw;
+    border-radius: 100%;
 }
 .etoilerreur img{
     height: 7vh; width: auto;
@@ -49,26 +58,39 @@
 }
 //-----------------------   buzz    -------------------------------
 .zonebuzz{
-    background-color: aquamarine;
     width: 100%;
-    height:16vw ;
+    height:18vw ;
     //display: flex; align-items: center; justify-content: center;
 }
 .buzz{
     border-radius: 100%;
+    border: rgb(51, 50, 50) solid 1vw;
     height: 16vw;width: 16vw;
+}
+.buzz:active{
+    border: rgb(51,50,50) solid 2vw;
+    transform: scale(0.8);
+    transform-origin: center;
 }
 .tas img{
 width: 30vw; height: auto;
 }
+.abandon img{
+    width: auto; height:5vh;   
+}
+.abandon{
+    display: flex; justify-content: center; 
+}
 .eteint{
-background-color: grey;
+background-color: rgb(163, 152, 152);
 }
 .orange{
-background-color: orange;
+background-color: rgb(60,220,100);
+box-shadow: 0px 0px 1vw green,0px 0px 2vw greenyellow,0px 0px 4vw greenyellow;
 }
 .rouge{
-    background-color: red;
+    background-color: rgb(230,40,100);
+    box-shadow: 0px 0px 1vw red,0px 0px 2vw rgb(245, 107, 107),0px 0px 4vw rgb(245, 107, 107);
 }
 .milieu{
 position: relative;
@@ -84,7 +106,6 @@ left: 17vw;
 }
 //------------------------------------------------------
 .pub{
-    background-color: green;
     width: 100%;
     height: 30%;
     }
@@ -183,8 +204,4 @@ left: 17vw;
         }
         
         85%,100%{
-            transform: rotateZ(0);
-        
-        }
-        
-    }   
+            transform: rotateZ(0);}} 

@@ -25,6 +25,7 @@ export class CrudservService {
       'recordD':0
     });
   }
+
   ///////////////////////////////////////////////////////////////////
   getId(id:any){
     return this.afs.doc(`performances/${id}`).valueChanges() as Observable<Perf>;
@@ -40,7 +41,7 @@ export class CrudservService {
     });
   }
     //-------------
-    getAllGains(monidauth:string){
+  getAllGains(monidauth:string){
       return this.afs.collection(`performances/${monidauth}/gains`).valueChanges() as Observable<any>;
     }
   ///////////////////////////////////////////////////////////////////////
@@ -65,37 +66,34 @@ export class CrudservService {
   //////////////////////////////////////    PARTIES    ///////////////////////////////////////////////////////////////
 newPartie(partie:any){
   console.log('on créée');
-    return this.afs.collection('parties').doc(`n-${partie.id}`).set({
+    return this.afs.collection('parties').doc(`n-${partie.num}`).set({
      joueur1: partie.joueur1, joueur2: partie.joueur2,
-     //'co1':false, 'co2':false,
+     num: partie.num,
+     'co1':false, 'co2':false,
      score1:0,score2:0,
      classetoile1:'invisible',  classetoile2:'invisible',  classerreur1:'invisible',  classerreur2:'invisible', 
      cartes: partie.cartes,
      douze:partie.douze,
      encours:false,gagnant:'',colorbuzz:'eteint', posbuzz:'milieu',
-
-  
-     interdit1:false, interdit2:false,
+     interdit : 0, 
      buzz:false,set1:false,set2:false, 
      
     });
   }
   //-----------------------
   getPartieId(idpartie:any){
-    return this.afs.doc(`parties/n-${idpartie}`).valueChanges() as Observable<Perf>;
+    return this.afs.doc(`parties/n-${idpartie}`).valueChanges() as Observable<any>;
   }
   //-----------------------
   updateqqch(idpartie:string, objet:any){
     return this.afs.doc(`parties/n-${idpartie}`).update(objet);
   }
   //------------------------
- 
   coDuel1(idpartie:string, etat:boolean){
-    return this.afs.doc(`parties/n-${idpartie}`).update({co1:etat});
+    return this.afs.doc(`parties/n-${idpartie}`).update({'co1':etat});
   }
-  
   coDuel2(idpartie:string, etat:boolean){
-    return this.afs.doc(`parties/n-${idpartie}`).update({co2:etat});
+    return this.afs.doc(`parties/n-${idpartie}`).update({'co2':etat});
   }
   ////////////////////////////////////////    MA COLLECTION mb- ///////////////////////////
   getAmi(monpseudo:string, ami:any){ //ne marche pas si on écrit pas 'mb-' avant le variable
@@ -103,7 +101,7 @@ newPartie(partie:any){
   }
   //---------
   getAllAmis(monpseudo:string){
-    return this.afs.collection(`mb-${monpseudo}`).valueChanges() as Observable<any>;
+    return this.afs.collection(`mb-${monpseudo}`).valueChanges({idField:'pseudo'}) as Observable<any>;
   }
   //---------
   majMaCollek(monpseudo:string,ami:string, objet:any){
@@ -113,7 +111,6 @@ newPartie(partie:any){
   majCollekAmi(monpseudo:string,ami:string, objet:any){
     return this.afs.doc(`mb-${ami}/${monpseudo}`).update(objet); 
   }
-
   /////////////////////////////////////////   MEMBRES    /////////////////////////////////////
   getAllMb(){
     return this.afs.collection('membres').valueChanges({idField:'pseudo'}) as Observable<any>;
@@ -138,8 +135,6 @@ newPartie(partie:any){
       etat:'co'
     });
   }
-  
-
 //////////////////
 ajouter(monpseudo:string, monidauth:string,monetat:string, pseudo:string,idauth:string,etat:string){
   this.afs.collection(`mb-${monpseudo}`).doc(pseudo).set({
@@ -157,7 +152,20 @@ inscr(monpseudo:string, monidauth:string){
     });
     
 }
-
+  /////////////////////////////////////////////////////
+  creerHisto(monpseudo:string, adv:string, score:number, scoreadv:number, gain:boolean){
+    let date = Date.now()+'';
+    return this.afs.doc(`hist/${monpseudo}/gains/${date}`).set({
+      adv: adv,
+      score:score,
+      scoreadv: scoreadv,
+      gain: gain
+    });
+  }
+  //-----------------------------------------------
+  deletePartie(num:string){
+    return this.afs.collection('parties').doc(`n-${num}`).delete();
+  }
 
 
 
