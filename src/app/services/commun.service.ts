@@ -17,6 +17,8 @@ export class CommunService {
   idu!: string;
   maPartie?:any;
   j?:number;
+
+  maStatToday:any;
   
 
   niveau?: number;

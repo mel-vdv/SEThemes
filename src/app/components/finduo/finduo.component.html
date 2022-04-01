@@ -12,8 +12,8 @@
                     <tbody *ngFor="let s of mesStat$">
                        <tr>
                            <td>{{s.date| date:'dd/MM/YYYY'}}</td>
-                           <td *ngIf="s.gain">défaite</td>
-                           <td *ngIf="!s.gain">victoire</td>
+                           <td *ngIf="!s.gain">défaite</td>
+                           <td *ngIf="s.gain">victoire</td>
                            <td>{{s.score}}-{{s.scoreadv}} ({{s.adv}}) </td>
                        </tr>
                     </tbody>

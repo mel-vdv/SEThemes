@@ -77,6 +77,7 @@ newPartie(partie:any){
      encours:false,gagnant:'',colorbuzz:'eteint', posbuzz:'milieu',
      interdit : 0, 
      buzz:false,set1:false,set2:false, 
+     finito: false
      
     });
   }
@@ -153,18 +154,19 @@ inscr(monpseudo:string, monidauth:string){
     
 }
   /////////////////////////////////////////////////////
-  creerHisto(monpseudo:string, adv:string, score:number, scoreadv:number, gain:boolean){
-    let date = Date.now()+'';
+  creerHisto(monpseudo:string, adv:string, score:number, scoreadv:number, gain:boolean, date:string){
+   
     return this.afs.doc(`hist/${monpseudo}/gains/${date}`).set({
       adv: adv,
       score:score,
       scoreadv: scoreadv,
-      gain: gain
+      gain: gain,
+      date: date
     });
   }
   //------------------------
   getStat(monpseudo:string){
-    return this.afs.collection(`hist/${monpseudo}/gains`).valueChanges({idField: 'date'});
+    return this.afs.collection(`hist/${monpseudo}/gains`, ref=> ref.orderBy('date','desc')).valueChanges({idField: 'date'});
   }
   //-----------------------------------------------
   deletePartie(num:string){

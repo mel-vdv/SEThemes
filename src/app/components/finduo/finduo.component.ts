@@ -1,3 +1,4 @@
+import { CommunService } from 'src/app/services/commun.service';
 import { CrudservService } from './../../services/crudserv.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,8 @@ export class FinduoComponent implements OnInit {
   constructor(
     private router: Router,
     private ar: ActivatedRoute,
-    private crud : CrudservService
+    private crud : CrudservService,
+    public commun: CommunService
   ) { }
 //------------
 monpseudo!:string;
@@ -20,14 +22,18 @@ mesStat$:any;
 maStatToday:any;
 //-------------------
   ngOnInit(): void {
+    if(this.commun.maStatToday){this.maStatToday = this.commun.maStatToday;}
     this.ar.paramMap.subscribe((params: any) => {
       this.monpseudo = params.get('pseudo');
-      // de là on récupère les stat du pseudo : 
+      let idpartie =params.get('idpartie');
+      // 1/ de là on récupère les stat du pseudo : 
       this.crud.getStat(this.monpseudo).subscribe(data=>{
         this.mesStat$ = data;
-        this.maStatToday = data.slice().pop();
-    
+        this.maStatToday = data[0];
+        this.commun.maStatToday= data[0];
       });
+      //2/ on delete le doc  n-partie:
+       this.crud.deletePartie(idpartie);
     });
   } 
 //-----------
