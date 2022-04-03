@@ -100,16 +100,19 @@ export class DuelComponent implements OnInit, OnDestroy {
   databuzzer() {
     //3/ data de la partie (bdd parties)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     let majPartie = this.crud.getPartieId(this.maPartie.num).subscribe((data: any) => {
+
       this.maPartie = data;
       this.commun.maPartie = data;
       this.lum1 = data.co1 ? 'co' : 'deco';
       this.lum2 = data.co2 ? 'co' : 'deco';
-      if (data.finito) {
-        console.log('data.finito');
-        this.beforeFinduo().then(()=>{
+      if (data.finito && this.alerte == 'encours') {
+        majPartie.unsubscribe();
+        console.log('data.finito: unsub + nav');
+
+        this.beforeFinduo().then(() => {
           this.router.navigate([`/finduo/${this.maPartie.num}/${this.monpseudo}`]);
-          majPartie.unsubscribe();console.log('desabonné');
-        })
+          majPartie.unsubscribe(); console.log('desabonné');
+        });
         return;
       }
       this.etatBuzzer();
@@ -228,9 +231,10 @@ export class DuelComponent implements OnInit, OnDestroy {
       && ((prem[3] === second[3] && prem[3] === troisiem[3]) || (prem[3] !== second[3] && prem[3] !== troisiem[3] && second[3] !== troisiem[3]))
     ) {
       if (triss == this.trio) {
-        console.log('gagné');if(this.maPartie.cartes.length==0 && !this.setDetecte){this.finish(); return;}
-        else{  this.gain(); return;}
-  
+        console.log('gagné'); this.gain();
+
+        return;
+
       }
       else {
         console.log('un set detecté, tas barré');
@@ -256,10 +260,11 @@ export class DuelComponent implements OnInit, OnDestroy {
           this.setDetecte = false;
           console.log('dernière combi : pas de set détecté');
           if (this.maPartie.cartes.length < 3) {
-          
+
             console.log('comme pas de cartes : finish');
-            if(!this.maPartie.finito){this.finish();}
+            if (this.alerte == "encours") { this.finish(); return; }
             return;
+
           }
           else {
             console.log('il reste des cartes: on pioche');
@@ -271,18 +276,19 @@ export class DuelComponent implements OnInit, OnDestroy {
     }
   }
   //etape 4 : consequences:******************************************************************
+  interdit15s1: any; interdit15s2: any;
   gain() {
     let objet;
     this.remplacer3();
     switch (this.jeSuis) {
       case 1: objet = {
-        'score1': this.maPartie.score1+1, 'set1': true, classetoile1: 'etoile',
+        'score1': this.maPartie.score1 + 1, 'set1': true, classetoile1: 'etoile',
         'interdit': 0,
         'buzz': false,
         'colorbuzz': 'orange', 'posbuzz': 'milieu'
       }; break;
       case 2: objet = {
-        'score2': this.maPartie.score2+1, 'set2': true, classetoile2: 'etoile',
+        'score2': this.maPartie.score2 + 1, 'set2': true, classetoile2: 'etoile',
         'interdit': 0,
         'buzz': false,
         'colorbuzz': 'orange', 'posbuzz': 'milieu'
@@ -294,25 +300,40 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.crud.updateqqch(this.maPartie.num, objet);
     setTimeout(() => {
       this.crud.updateqqch(this.maPartie.num, { classetoile1: 'invisible', classetoile2: 'invisible' });
-    }, 2000);
+    }
+      , 2000);
 
   }
   //-----------------------------------------------------------------------------------------------
   loose() {
     switch (this.jeSuis) {
       case 1: this.crud.updateqqch(this.maPartie.num, { interdit: 1, buzz: false, colorbuzz: 'orange', posbuzz: 'droite', classerreur1: 'erreur' });
-        setTimeout(() => {
-          this.crud.updateqqch(this.maPartie.num, { interdit: 0 });
-          // if (!this.maPartie.buzz) { this.crud.updateqqch(this.maPartie.num, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
+        this.interdit15s1 = setTimeout(() => {
+          if (this.maPartie.buzz || this.maPartie.interdit === 2) {
+            clearTimeout(this.interdit15s1);
+            console.log('fin15sec :pas de interdit 0 car buzz en cours/interdit2');
+          }
+          else {
+            this.crud.updateqqch(this.maPartie.num, { interdit: 0 });
+            console.log('fin des 15sec, interdit 1=>0');
+          }
+
         }, 15000);
         setTimeout(() => {
           this.crud.updateqqch(this.maPartie.num, { classerreur1: 'invisible' });
         }, 2000);
         break;
       case 2: this.crud.updateqqch(this.maPartie.num, { interdit: 2, buzz: false, colorbuzz: 'orange', posbuzz: 'gauche', classerreur2: 'erreur' });
-        setTimeout(() => {
-          this.crud.updateqqch(this.maPartie.num, { interdit: 0 });
-          if (!this.maPartie.buzz) { this.crud.updateqqch(this.maPartie.num, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
+        this.interdit15s2 = setTimeout(() => {
+          if (this.maPartie.buzz || this.maPartie.interdit === 1) {
+            clearTimeout(this.interdit15s2);
+            console.log('fin 15s :clear :pas de interdit 0 car buzz en cours/interdit1');
+          }
+          else {
+            this.crud.updateqqch(this.maPartie.num, { interdit: 0 });
+            console.log('fin des 15sec; interdit 2=>0');
+          }
+          //  if (!this.maPartie.buzz) { this.crud.updateqqch(this.maPartie.num, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
         }, 15000);
         setTimeout(() => {
           this.crud.updateqqch(this.maPartie.num, { classerreur2: 'invisible' });
@@ -335,43 +356,51 @@ export class DuelComponent implements OnInit, OnDestroy {
   index1 = 0;
   index2 = 0;
   index3 = 0;
-  remplacer3() { if(!this.maPartie.finito){
-    console.log('on remplace les 3 cartes gagnées');
+  remplacer3() {
+    if (!this.maPartie.finito) {
+      console.log('on remplace les 3 cartes gagnées');
 
-    this.index1 = this.maPartie.douze.findIndex((element: any) => element.perso === this.trio[0]);
-    this.index2 = this.maPartie.douze.findIndex((element: any) => element.perso === this.trio[1]);
-    this.index3 = this.maPartie.douze.findIndex((element: any) => element.perso === this.trio[2]);
-    this.trio = [];
+      this.index1 = this.maPartie.douze.findIndex((element: any) => element.perso === this.trio[0]);
+      this.index2 = this.maPartie.douze.findIndex((element: any) => element.perso === this.trio[1]);
+      this.index3 = this.maPartie.douze.findIndex((element: any) => element.perso === this.trio[2]);
+      this.trio = [];
 
-    if (this.maPartie.cartes.length > 2) {
+      if (this.maPartie.cartes.length > 2) {
 
-      let hasard1 = Math.floor(Math.random() * this.maPartie.cartes.length);
-      let hasard2 = Math.floor(Math.random() * (this.maPartie.cartes.length - 1));
-      let hasard3 = Math.floor(Math.random() * (this.maPartie.cartes.length - 2));
+        let hasard1 = Math.floor(Math.random() * this.maPartie.cartes.length);
+        let hasard2 = Math.floor(Math.random() * (this.maPartie.cartes.length - 1));
+        let hasard3 = Math.floor(Math.random() * (this.maPartie.cartes.length - 2));
 
-      this.maPartie.douze.splice(this.index1, 1, { perso: this.maPartie.cartes[hasard1], classe: 'case' });
-      this.maPartie.cartes.splice(hasard1, 1);
-      this.maPartie.douze.splice(this.index2, 1, { perso: this.maPartie.cartes[hasard2], classe: 'case' });
-      this.maPartie.cartes.splice(hasard2, 1);
-      this.maPartie.douze.splice(this.index3, 1, { perso: this.maPartie.cartes[hasard3], classe: 'case' });
-      this.maPartie.cartes.splice(hasard3, 1);
-    }
-    else {
-      console.log('avant : tas vide, on va détecter..');
-      this.maPartie.douze.splice(this.index1, 1, { perso: 'vide', classe: 'case' });
-      this.maPartie.douze.splice(this.index2, 1, { perso: 'vide', classe: 'case' });
-      this.maPartie.douze.splice(this.index3, 1, { perso: 'vide', classe: 'case' });
+        this.maPartie.douze.splice(this.index1, 1, { perso: this.maPartie.cartes[hasard1], classe: 'case' });
+        this.maPartie.cartes.splice(hasard1, 1);
+        this.maPartie.douze.splice(this.index2, 1, { perso: this.maPartie.cartes[hasard2], classe: 'case' });
+        this.maPartie.cartes.splice(hasard2, 1);
+        this.maPartie.douze.splice(this.index3, 1, { perso: this.maPartie.cartes[hasard3], classe: 'case' });
+        this.maPartie.cartes.splice(hasard3, 1);
 
-      this.detecterSet();
-    }
-    let objet = { cartes: this.maPartie.cartes, douze: this.maPartie.douze };
-    this.crud.updateqqch(this.maPartie.num, objet).then(() => {
-      /*if (this.maPartie.cartes.length < 3) {
-        console.log('après : tas vide : on va détecter..');
+      }
+      else {
+        console.log('avant : tas vide, on va détecter..');
+        this.maPartie.douze.splice(this.index1, 1, { perso: 'vide', classe: 'case' });
+        this.maPartie.douze.splice(this.index2, 1, { perso: 'vide', classe: 'case' });
+        this.maPartie.douze.splice(this.index3, 1, { perso: 'vide', classe: 'case' });
+
         this.detecterSet();
-      }*/
-    });
-  }}
+
+      }
+      let objet = { cartes: this.maPartie.cartes, douze: this.maPartie.douze };
+      this.crud.updateqqch(this.maPartie.num, objet).then(() => {
+        if (this.maPartie.cartes.length < 3 && !this.commun.maPartie.finito && this.alerte == 'encours') {
+          console.log('après : tas vide : on va détecter..');
+          this.detecterSet();
+          return;
+        }
+        else { return; }
+      });
+      return;
+    }
+    return;
+  }
   //----------------------------------
   setDetecte?: boolean;
   dernierCombi?: boolean;
@@ -399,6 +428,9 @@ export class DuelComponent implements OnInit, OnDestroy {
           combi.push(e1, x, y);
           this.combiArr.push(combi);
         });
+
+
+
       });
     });
     this.combiArr.shift();
@@ -409,7 +441,9 @@ export class DuelComponent implements OnInit, OnDestroy {
         return;
       }
       else {
-        if (i == this.combiArr.length - 1) { console.log('dernier combi'); this.dernierCombi = true; }
+        if (i == this.combiArr.length - 1) {
+          console.log('dernier combi'); this.dernierCombi = true;
+        }
         this.verifier(this.combiArr[i]);
       }
     }
@@ -417,10 +451,11 @@ export class DuelComponent implements OnInit, OnDestroy {
   //-------------------------------------
   gagnant: any; perdant: any; scoreg: any; scorep: any; date: any;
   async beforeFinduo() {
-    this.gagnant = this.maPartie.score1 > this.maPartie.score2 ? this.maPartie.joueur1 : this.maPartie.joueur2;
-    this.perdant = this.maPartie.score1 > this.maPartie.score2 ? this.maPartie.joueur2 : this.maPartie.joueur1;
-    this.scoreg = this.maPartie.score1 > this.maPartie.score2 ? this.maPartie.score1+1 : this.maPartie.score2+1;
-    this.scorep = this.maPartie.score1 > this.maPartie.score2 ? this.maPartie.score2 : this.maPartie.score1;
+    console.log('1er then : beforeduo');
+    this.gagnant = this.maPartie.score1 >= this.maPartie.score2 ? this.maPartie.joueur1 : this.maPartie.joueur2;
+    this.perdant = this.maPartie.score1 >= this.maPartie.score2 ? this.maPartie.joueur2 : this.maPartie.joueur1;
+    this.scoreg = this.maPartie.score1 >= this.maPartie.score2 ? this.maPartie.score1 : this.maPartie.score2;
+    this.scorep = this.maPartie.score1 >= this.maPartie.score2 ? this.maPartie.score2 : this.maPartie.score1;
     this.date = Date.now() + '';
     if (this.monpseudo == this.gagnant) {
       return this.commun.maStatToday = {
@@ -432,27 +467,59 @@ export class DuelComponent implements OnInit, OnDestroy {
         gain: false, adv: this.gagnant, score: this.scorep, scoreadv: this.scoreg
       }
     }
+
   }
-  finish() {
-    if (!this.commun.maPartie.finito||!this.maPartie.finito){ 
-      this.maPartie.finito=true; this.commun.maPartie.finito=true;
-       //1/ on declare a l'adv que c'est finito
+  //----------------------------------------------------------------
+  alerte = 'encours';
+  async finish() {
+    if (this.alerte == 'fini') {
+      console.log('alerte=fini');
+      this.beforeFinduo().then(() => { this.partir(); return; });
+      return;
+    }
+    else {
+      console.log('alerte=encours, on change');
+      this.alerte = 'fini';
+      //1/ vite : on declare a l'adv que c'est finito
       this.crud.updateqqch(this.maPartie.num, { finito: true });
-      console.log('pas de set, pas de cartes : partie finie');
-
       this.beforeFinduo().then(() => {
-        //2/ on enregistre perf/kli/historique/{adv:gain:score:scoreadv:date}
-
-        this.crud.creerHisto(this.gagnant, this.perdant, this.scoreg, this.scorep, true, this.date);
-        this.crud.creerHisto(this.perdant, this.gagnant, this.scorep, this.scoreg, false, this.date);
-        //3/ on met à jour les statuts: mb-max et mb-mel : statut : aucun
-        this.crud.majCollekAmi(this.gagnant, this.perdant, { statut: 'aucun' });
-        this.crud.majCollekAmi(this.perdant, this.gagnant, { statut: 'aucun' });
-      }).then(()=>{
-         this.router.navigate([`/finduo/${this.maPartie.num}/${this.monpseudo}`]);
+        this.updatePartie();
+        return;
       });
-     
-    }//------------------------------------------------------------------------------
+    }
+  }
+
+  //--------------------------------------
+  async partir() {
+    console.log('3em then : nav2');
+    await this.router.navigate([`/finduo/${this.maPartie.num}/${this.monpseudo}`]);
+    return;
+  }
+  //-------------------------------------------
+  async updatePartie() {
+    console.log('2er then:update');
+    // 2 on verifie que pas doublon: 
+    this.crud.getHistByNum(this.monpseudo, this.maPartie.num).subscribe((data: any) => {
+      if (data.filter((e: any) => e.num === this.maPartie.num).length == 0) {
+        console.log('on update');
+        //3/ on enregistre perf/kli/historique/{adv:gain:score:scoreadv:date}
+        this.crud.creerHisto(this.maPartie.num, this.gagnant, this.perdant, this.scoreg, this.scorep, true, this.date).then(() => {
+          console.log('on a update');
+        });
+        this.crud.creerHisto(this.maPartie.num, this.perdant, this.gagnant, this.scorep, this.scoreg, false, this.date);
+        //4/ on met à jour les statuts: mb-max et mb-mel : statut : aucun
+        this.crud.majCollekAmi(this.gagnant, this.perdant, { statut: 'aucun' });
+        this.crud.majCollekAmi(this.perdant, this.gagnant, { statut: 'aucun' }).then(() => {
+          this.partir();
+          return;
+        });
+      }
+      else {
+        console.log('deja update');
+        this.partir();
+        return;
+      }
+    });
     return;
   }
   //-------------------------------------------
@@ -466,7 +533,11 @@ export class DuelComponent implements OnInit, OnDestroy {
       this.timer--;
       if (this.timer === 0) {
         console.log('temps écoulé');
-        clearInterval(this.tictac); this.timerVis = false; this.loose();
+        clearInterval(this.tictac); this.timerVis = false; this.loose(); this.trio = [];
+        this.maPartie.douze.forEach((e: any) => {
+          e.classe = 'case';
+        });
+        this.crud.updateqqch(this.maPartie.num, { douze: this.maPartie.douze });
       }
 
     }, 1000);
@@ -477,22 +548,18 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   }
   ///////////////////////////////////////////////////////////////
-  async ngOnDestroy() {
-    await this.crud.deco(this.monpseudo);
+  ngOnDestroy() {
+    console.log('duel.destroy');
 
-
-
-
-    if (!this.commun.maPartie.finito) {
+    if (!this.commun.maPartie.finito && this.alerte == 'encours') {
+      this.crud.deco(this.monpseudo);
       if (this.jeSuis == 1) {
-
         console.log('duel.destroy: co1');
-
-        await this.crud.coDuel1(this.maPartie.num, false);
+        this.crud.coDuel1(this.maPartie.num, false);
       }
       else {
         console.log('duel.destroy: co2');
-        await this.crud.coDuel2(this.maPartie.num, false);
+        this.crud.coDuel2(this.maPartie.num, false);
       }
     }
 

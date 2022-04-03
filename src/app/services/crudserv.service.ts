@@ -85,6 +85,10 @@ newPartie(partie:any){
   getPartieId(idpartie:any){
     return this.afs.doc(`parties/n-${idpartie}`).valueChanges() as Observable<any>;
   }
+  //------------------------
+  getpartieById(idpartie:any){
+    return this.afs.collection('parties').doc(`n-${idpartie}`).valueChanges() as Observable<any>;
+  }
   //-----------------------
   updateqqch(idpartie:string, objet:any){
     return this.afs.doc(`parties/n-${idpartie}`).update(objet);
@@ -126,7 +130,7 @@ newPartie(partie:any){
   }
   //---------------
   deco(monpseudo:string){
-    return this.afs.collection('membres').doc(monpseudo).update({
+    return this.afs.collection('membres').doc(`${monpseudo}`).update({
       etat:'deco'
     });
   }
@@ -154,9 +158,10 @@ inscr(monpseudo:string, monidauth:string){
     
 }
   /////////////////////////////////////////////////////
-  creerHisto(monpseudo:string, adv:string, score:number, scoreadv:number, gain:boolean, date:string){
+  creerHisto(num: string,monpseudo:string, adv:string, score:number, scoreadv:number, gain:boolean, date:string){
    
-    return this.afs.doc(`hist/${monpseudo}/gains/${date}`).set({
+    return this.afs.doc(`hist/${monpseudo}/gains/num${num}`).set({
+      num:num,
       adv: adv,
       score:score,
       scoreadv: scoreadv,
@@ -165,8 +170,11 @@ inscr(monpseudo:string, monidauth:string){
     });
   }
   //------------------------
+  getHistByNum(monpseudo:string,num:string){
+ return this.afs.collection(`hist/${monpseudo}/gains`).valueChanges() as Observable<any>;
+  }
   getStat(monpseudo:string){
-    return this.afs.collection(`hist/${monpseudo}/gains`, ref=> ref.orderBy('date','desc')).valueChanges({idField: 'date'});
+    return this.afs.collection(`hist/${monpseudo}/gains`, ref=> ref.orderBy('date','desc')).valueChanges();
   }
   //-----------------------------------------------
   deletePartie(num:string){

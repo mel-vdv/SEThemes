@@ -12,8 +12,10 @@
                     <tbody *ngFor="let s of mesStat$">
                        <tr>
                            <td>{{s.date| date:'dd/MM/YYYY'}}</td>
-                           <td *ngIf="!s.gain">défaite</td>
-                           <td *ngIf="s.gain">victoire</td>
+                           <td *ngIf="s.score>s.scoreadv && s.gain"><img src="./../../../assets/victoire.png" alt="coupe-mini"></td>
+                           <td *ngIf="s.score<s.scoreadv && !s.gain"><img src="./../../../assets/defaite.png" alt="coupe-mini"></td>
+                           <td *ngIf="s.score==s.scoreadv">ex-aequo</td>
+
                            <td>{{s.score}}-{{s.scoreadv}} ({{s.adv}}) </td>
                        </tr>
                     </tbody>

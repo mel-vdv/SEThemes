@@ -45,8 +45,8 @@
 <!---------------------------------------------------------------------------------------------------------------------->    
   <div class="jeu">
     <div *ngFor="let carte of maPartie.douze">
-      <div *ngIf="carte.perso && carte.perso !== undefined && carte.perso !== 'null'"  (click)="select(carte.perso)" class="{{carte.classe}}"><img src="./../../../assets/normal/{{carte.perso}}.png" alt=""></div>   
-      <div *ngIf="!carte.perso || carte.perso == undefined || carte.perso == 'null'" class="case vide"></div>
+      <div *ngIf="carte.perso !== 'vide'"  (click)="select(carte.perso)" class="{{carte.classe}}"><img src="./../../../assets/normal/{{carte.perso}}.png" alt=""></div>   
+      <div *ngIf="carte.perso == 'vide'" class="case vide"></div>
     </div>
   </div>
 <!--------------------------------------------------------------------------------------------------------------------->
