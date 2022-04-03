@@ -72,6 +72,7 @@ newPartie(partie:any){
      'co1':false, 'co2':false,
      score1:0,score2:0,
      classetoile1:'invisible',  classetoile2:'invisible',  classerreur1:'invisible',  classerreur2:'invisible', 
+     classetemps1: 'invisible', classetemps2:'invisible',
      cartes: partie.cartes,
      douze:partie.douze,
      encours:false,gagnant:'',colorbuzz:'eteint', posbuzz:'milieu',

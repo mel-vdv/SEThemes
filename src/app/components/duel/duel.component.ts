@@ -306,8 +306,15 @@ export class DuelComponent implements OnInit, OnDestroy {
   }
   //-----------------------------------------------------------------------------------------------
   loose() {
+
     switch (this.jeSuis) {
-      case 1: this.crud.updateqqch(this.maPartie.num, { interdit: 1, buzz: false, colorbuzz: 'orange', posbuzz: 'droite', classerreur1: 'erreur' });
+      case 1:
+        if (this.tempsecoule) {
+          this.crud.updateqqch(this.maPartie.num, { interdit: 1, buzz: false, colorbuzz: 'orange', posbuzz: 'droite', classetemps1: 'erreur' });
+        }
+        else { this.crud.updateqqch(this.maPartie.num, { interdit: 1, buzz: false, colorbuzz: 'orange', posbuzz: 'droite', classerreur1: 'erreur' }); }
+
+
         this.interdit15s1 = setTimeout(() => {
           if (this.maPartie.buzz || this.maPartie.interdit === 2) {
             clearTimeout(this.interdit15s1);
@@ -319,11 +326,22 @@ export class DuelComponent implements OnInit, OnDestroy {
           }
 
         }, 15000);
+
         setTimeout(() => {
-          this.crud.updateqqch(this.maPartie.num, { classerreur1: 'invisible' });
+          if (this.tempsecoule) { this.crud.updateqqch(this.maPartie.num, { classetemps1: 'invisible' }); }
+          else { this.crud.updateqqch(this.maPartie.num, { classerreur1: 'invisible' }); }
+
         }, 2000);
         break;
-      case 2: this.crud.updateqqch(this.maPartie.num, { interdit: 2, buzz: false, colorbuzz: 'orange', posbuzz: 'gauche', classerreur2: 'erreur' });
+
+      case 2:
+        if (this.tempsecoule) {
+          this.crud.updateqqch(this.maPartie.num, { interdit: 2, buzz: false, colorbuzz: 'orange', posbuzz: 'gauche', classetemps2: 'erreur' });
+        }
+        else {
+          this.crud.updateqqch(this.maPartie.num, { interdit: 2, buzz: false, colorbuzz: 'orange', posbuzz: 'gauche', classerreur2: 'erreur' });
+        }
+
         this.interdit15s2 = setTimeout(() => {
           if (this.maPartie.buzz || this.maPartie.interdit === 1) {
             clearTimeout(this.interdit15s2);
@@ -336,7 +354,11 @@ export class DuelComponent implements OnInit, OnDestroy {
           //  if (!this.maPartie.buzz) { this.crud.updateqqch(this.maPartie.num, { colorbuzz: 'orange', posbuzz: 'milieu' }); }
         }, 15000);
         setTimeout(() => {
-          this.crud.updateqqch(this.maPartie.num, { classerreur2: 'invisible' });
+          if (this.tempsecoule) {
+            this.crud.updateqqch(this.maPartie.num, { classetemps2: 'invisible' });
+          }
+          else { this.crud.updateqqch(this.maPartie.num, { classerreur2: 'invisible' }); }
+
         }, 2000);
         break;
       default: console.log('pb loose: je suis ni joueur 1 ni 2');
@@ -488,7 +510,6 @@ export class DuelComponent implements OnInit, OnDestroy {
       });
     }
   }
-
   //--------------------------------------
   async partir() {
     console.log('3em then : nav2');
@@ -524,22 +545,25 @@ export class DuelComponent implements OnInit, OnDestroy {
   }
   //-------------------------------------------
   timerVis!: boolean;
+  tempsecoule!: boolean;
   timer!: number;
   tictac: any;
   goTimer() {
-    console.log('go timer();')
+    this.tempsecoule = false;
+    console.log('go timer();');
     this.timer = 10; this.timerVis = true;
     this.tictac = setInterval(() => {
       this.timer--;
       if (this.timer === 0) {
-        console.log('temps écoulé');
-        clearInterval(this.tictac); this.timerVis = false; this.loose(); this.trio = [];
+        console.log('temps écoulé'); this.tempsecoule = true;
+        clearInterval(this.tictac); this.timerVis = false; this.trio = [];
         this.maPartie.douze.forEach((e: any) => {
           e.classe = 'case';
         });
         this.crud.updateqqch(this.maPartie.num, { douze: this.maPartie.douze });
-      }
 
+        this.loose();
+      }
     }, 1000);
   }
   //-----------

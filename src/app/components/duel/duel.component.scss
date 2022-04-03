@@ -46,6 +46,9 @@
 .invisible{
     display: none;
 }
+.temps{
+    display: block;
+}
 .etoile{
     display: block;
     animation: briller 0.2s linear;
@@ -108,11 +111,11 @@ left: 42vw;
 }
 .droite{
     position: relative;
-left: 67vw;
+left: 77vw;
 }
 .gauche{
     position: relative;
-left: 17vw;
+left: 7vw;
 }
 //------------------------------------------------------
 .pub{
