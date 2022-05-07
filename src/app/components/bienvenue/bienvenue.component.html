@@ -16,25 +16,33 @@
             <img src="./../../../assets/bandeau-d.png" alt="banderolle">
         </div>
     </div>
-<!--------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------->
     <div *ngIf="on">
-  <div class="but">
-        <div (click)="voirRegles()"><img src="./../../../assets/regles.png" alt="regles"></div>
+        <div *ngIf="language" class="language">
+            <div (click)="drapeau('fr')"><img src="./../../../assets/fr.png" alt="drapeau"></div>
+            <div (click)="drapeau('en')"><img src="./../../../assets/en.png" alt="drapeau"></div>
+            <div (click)="drapeau('ru')"><img src="./../../../assets/ru.png" alt="drapeau"></div>
+        </div>
+        <div *ngIf="!language">
+            <div class="but">
+                <div (click)="voirRegles()"><img src="./../../../assets/regles.png" alt="regles"></div>
+            </div>
+            <div class="jouer">
+                <div *ngIf="!niveauVis" (click)="clickNiveau()"><img src="./../../../assets/jouer.png" alt="game"></div>
+            </div>
+            <div *ngIf="niveauVis" class="choix">
+                <div class="choi" (click)="choixNiveau(1)">DEBUTANT</div>
+                <div class="choi" (click)="choixNiveau(2)">CONFIRME</div>
+            </div>
+            <div class="onoff" (click)="decoGoogle()"><img src="./../../../assets/off.png" alt="bouton"></div>
+        </div>
+
     </div>
-    <div class="jouer">
-        <div *ngIf="!niveauVis" (click)="clickNiveau()"><img src="./../../../assets/jouer.png" alt="game"></div>
-    </div>
-    <div *ngIf="niveauVis" class="choix">
-        <div class="choi" (click)="choixNiveau(1)">DEBUTANT</div>
-        <div class="choi" (click)="choixNiveau(2)">CONFIRME</div>
-    </div>
-    <div class="onoff" (click)="decoGoogle()"><img src="./../../../assets/off.png" alt="bouton"></div>
-    </div>
-<!--------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------->
     <div class='onoff' *ngIf="!on">
-        <div class="bouton-on"(click)="authGoogle()"><img src="./../../../assets/on.png" alt="bouton"></div>
+        <div class="bouton-on" (click)="authGoogle()"><img src="./../../../assets/on.png" alt="bouton"></div>
     </div>
-<!--------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------->
     <div class="banderolle">
 
         <div class="droite nivtrois">

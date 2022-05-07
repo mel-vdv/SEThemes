@@ -3,7 +3,17 @@
 <div class="compTheme">
     <div class="haut" (click)="haut()"><img src="./../../../assets/haut.png" alt=""></div>
     <div (click)="choisir()" class="choix">
-       <img  src="./../../../assets/{{choix}}.png" alt=""> 
+        
+       <img  src="./../../../assets/normal.png" alt="image du theme" *ngIf="choix=='normal'"> 
+       <img  src="./../../../assets/bonbons.png" alt="image du theme" *ngIf="choix=='bonbons'"> 
+       <img  src="./../../../assets/poissons.png" alt="image du theme" *ngIf="choix=='poissons'"> 
+       <img  src="./../../../assets/pommes.png" alt="image du theme" *ngIf="choix=='pommes'"> 
+       <img  src="./../../../assets/bites.png" alt="image du theme" *ngIf="choix=='bites'"> 
+     
+       
     </div>
     <div class="bas"(click)="bas()"><img src="./../../../assets/bas.png" alt=""></div>
 </div>
+
+
+<!-- <img  src="./../../../assets/{{choix}}.png"-->

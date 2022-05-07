@@ -2,14 +2,14 @@
     <div class="haut">
         <div class="zone joueur un">
             <div class="nom">
-                <div>{{maPartie.joueur1}} </div>
+                <div>{{maPartie.joueur1|uppercase}} </div>
                 <div class="{{lum1}}"></div>
             </div>
             <div class="score">{{maPartie.score1}}</div>
             <div class="etoilerreur">
-                <img  class="{{maPartie.classetoile1}}" src="./../../../assets/etoile.png" alt="etoile">
-                <img  class="{{maPartie.classerreur1}}"  src="./../../../assets/error.png" alt="erreur">
-                <img  class="{{maPartie.classetemps1}}" src="./../../../assets/temps-ecoule.png" alt="temps-ecoule">
+                <img class="{{maPartie.classetoile1}}" src="./../../../assets/etoile.png" alt="etoile">
+                <img class="{{maPartie.classerreur1}}" src="./../../../assets/error.png" alt="erreur">
+                <img class="{{maPartie.classetemps1}}" src="./../../../assets/temps-ecoule.png" alt="temps-ecoule">
             </div>
         </div>
 
@@ -18,42 +18,60 @@
                 <div><img (click)="abandonner()" src="./../../../assets/abandon.png" alt="abandon"></div>
             </div>
             <div class="tas">
-                <div *ngIf="maPartie.cartes.length>2 && !setDetecte"><img (click)="detecterSet()" src="./../../../assets/tas.png" alt="tas"></div>
-                <div *ngIf="maPartie.cartes.length>2 && setDetecte"><img src="./../../../assets/tasbarre.png" alt="tas"></div>
+                <div *ngIf="maPartie.cartes.length>2 && !setDetecte"><img (click)="detecterSet()"
+                        src="./../../../assets/tas.png" alt="tas"></div>
+                <div *ngIf="maPartie.cartes.length>2 && setDetecte"><img src="./../../../assets/tasbarre.png" alt="tas">
+                </div>
             </div>
-           
+
         </div>
 
         <div class="zone joueur deux">
             <div class="nom">
-                {{maPartie.joueur2}}
+                {{maPartie.joueur2|uppercase}}
                 <div class="{{lum2}}"></div>
             </div>
             <div class="score">{{maPartie.score2}}</div>
             <div class="etoilerreur">
-                <img  class="{{maPartie.classetoile2}}" src="./../../../assets/etoile.png" alt="etoile">
-                <img  class="{{maPartie.classerreur2}}"  src="./../../../assets/error.png" alt="erreur">
-                <img  class="{{maPartie.classetemps2}}" src="./../../../assets/temps-ecoule.png" alt="temps-ecoule">
+                <img class="{{maPartie.classetoile2}}" src="./../../../assets/etoile.png" alt="etoile">
+                <img class="{{maPartie.classerreur2}}" src="./../../../assets/error.png" alt="erreur">
+                <img class="{{maPartie.classetemps2}}" src="./../../../assets/temps-ecoule.png" alt="temps-ecoule">
             </div>
 
         </div>
     </div>
-<!-------------------------------------------------------------------------------------------------------------------->
+    <!-------------------------------------------------------------------------------------------------------------------->
     <div class="zonebuzz">
         <div class="buzz {{maPartie.colorbuzz}} {{maPartie.posbuzz}}" (click)="buzzer()">
-             <div *ngIf="timerVis" class="timer">{{timer}}</div>
+            <div *ngIf="timerVis" class="timer">{{timer}}</div>
         </div>
     </div>
-<!---------------------------------------------------------------------------------------------------------------------->    
-  <div class="jeu">
-    <div *ngFor="let carte of maPartie.douze">
-      <div *ngIf="carte.perso !== 'vide'"  (click)="select(carte.perso)" class="{{carte.classe}}"><img src="./../../../assets/normal/{{carte.perso}}.png" alt=""></div>   
-      <div *ngIf="carte.perso == 'vide'" class="case vide"></div>
+    <!---------------------------------------------------------------------------------------------------------------------->
+    <div class="jeu">
+        <div *ngFor="let carte of maPartie.douze">
+            <div *ngIf="carte.perso !== 'vide'" (click)="select(carte.perso)" class="{{carte.classe}}"><img
+                    src="./../../../assets/normal/{{carte.perso}}.png" alt=""></div>
+            <div *ngIf="carte.perso == 'vide'" class="case vide"></div>
+        </div>
     </div>
-  </div>
-<!--------------------------------------------------------------------------------------------------------------------->
-    <div class="pub"></div>
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <div class="pub">
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6793915727508963"
+        crossorigin="anonymous"></script>
+   <!-- bloc-hor -->
+   <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-6793915727508963"
+        data-ad-slot="1764988133"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+   <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+   </script>
+
+    </div>
 
 
-<!---------------------------------->    
+    <!---------------------------------->
 </div>

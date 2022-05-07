@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
    background-color: #c4fffd;
+   overflow:hidden;
 }
 
 .banderolle{
@@ -14,6 +15,18 @@
     height:35vw;
     display: flex;
     justify-content: center; align-items:center;
+}
+.language{
+ display: flex;
+ height: 55vh;
+ width: 100vw;
+ flex-direction: column;
+ justify-content: space-around;
+ align-items: center;
+}
+img[alt='drapeau']{
+    height: 8vh;
+    width: auto;
 }
 img[alt='bouton']{
     display: block;
@@ -94,7 +107,7 @@ top: 16vw;
 bottom:16vw;
 }
 .nivquatre{
-bottom: 0vw;;
+bottom: 0vw;
 }
 @keyframes droite {
    0%{
@@ -112,6 +125,99 @@ bottom: 0vw;;
          transform: translateX(-200vw);
          }
  }
+
+ @media only screen and (min-width : 600px){
+    .container{
+        width: 450px;height: 600px;
+    }
+    
+    .banderolle{
+        height: 180px;
+    }
+    .onoff{
+        width: 450px;
+        height:157px;
+    }
+    .language{
+     height: 330px;
+     width: 450px;
+    }
+    img[alt='drapeau']{
+        height:48px;
+    }
+    img[alt='bouton']{
+        width: 112px;
+    }
+    .but, .jouer{
+        width:337px;
+    }
+    .but div{
+        height: 45px;
+        width: 337px;
+    }
+    .jouer div{
+        margin-top: 22.5px;
+        height: 120px;
+        width: 382px ;
+    }
+    
+    .jouer div, .but div, .choi{
+        border-radius: 22.5px;
+    }
+    .choix{
+        width: 450px;
+    }
+    .choi{
+        margin-top: 22.5px;
+        width: 202px;
+        height:120px;
+        font-size:36px;
+    }
+    ///////////////////////////////
+    .jouer img, .but img{
+        width: 405px;
+    }
+    ///////////////////////////////////////////////////////////////////@at-root
+    img[alt='banderolle']{
+    width:225px; height: 37.5px;
+    }
+    .droite {
+        width: 450px;  height: 37.5px;position: absolute;left:-450px;
+    }   
+    .gauche{
+        width: 450px; height: 37.5px;position: absolute; left:450px;
+    }
+    .nivun{
+    top: 0px; 
+    }
+    .nivdeux{
+    top: 37.5px;
+    }
+    .nivtrois{
+    top: 525px;
+    }
+    .nivquatre{
+    top: 562.5px
+    }
+
+    @keyframes droite {
+        0%{
+         transform: translateX(0);
+         }
+         100%{
+             transform: translateX(900px);
+             }
+     }
+     @keyframes gauche {
+         0%{
+          transform: translateX(0);
+          }
+          100%{
+              transform: translateX(-900px);
+              }
+      }
+ }
+
 
 
   

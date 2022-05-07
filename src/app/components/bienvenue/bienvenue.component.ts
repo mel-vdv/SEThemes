@@ -24,7 +24,7 @@ export class BienvenueComponent implements OnInit{
     private auth: AngularFireAuth,
     private crud: CrudservService
   ) { }
-  niveauVis = false;
+  niveauVis = false; language!:boolean;
   result: any;
   user?: User;// (interface fournie par firebase)
   userSub?: Subscription;
@@ -33,10 +33,9 @@ export class BienvenueComponent implements OnInit{
   ngOnInit(): void {
    console.log('bien.init: on verif la connexion');
    this.verifConnect();
+
+   this.language = true;
   }
-
-
-
   //--------------------------------
 
   voirRegles() {
@@ -45,6 +44,13 @@ export class BienvenueComponent implements OnInit{
     }, 600);
   }
   //---------------------
+  drapeau(lang:string){
+    this.language= false;
+    this.commun.language = lang;
+    console.log('langue choisie: ',lang);
+  }
+  //----------------------------
+
   clickNiveau() {
     this.niveauVis = true;
   }

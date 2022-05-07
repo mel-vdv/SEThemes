@@ -3,8 +3,6 @@
     top:0px;left:0px; position:absolute;
     display: flex;
     flex-direction: column;align-items: center;
-   //background-color: #c4fffd;
-  // background-color: #46abe8;
   background: linear-gradient(#46abe8,#c4fffd);
 }
 img{
@@ -12,16 +10,47 @@ img{
     height: 8vh;
 }
 .explication{
-width: 80%;
+width: 85%;
 color: #46abe8;
 font-weight: bold;
-font-size: 2.8vh;
+font-size: 2.7vh;
 height: 40vh;
-padding: 5vw;
+padding: 2vh;
 background-color: white;
 border: rgb(230,40,100) 1vw solid;
-border-radius: 5vw;
+border-radius: 2vh;
 }
 img[alt='retour']{
     width: 5vh;
 }
+img[alt='fleche']{
+    width: 12%; height: auto;
+   // position: absolute;
+  //  top: 44vh ;left:30vh;
+}
+
+//--------------------------------------------------------------
+
+@media only screen and (min-width: 600px) {
+    .x{
+        position: absolute; top: 0px; left:0px;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+    }
+    .publicite{
+        width: 20vw;
+        height: 100vh;
+        background: linear-gradient(#46abe8,#c4fffd);
+    }
+   
+    .container{
+        position: relative;
+        width: 60vw;height: 100vh;
+        display: flex;
+        flex-direction: column;align-items: center;
+        background: linear-gradient(#46abe8,#c4fffd);
+    }
+  
+
+  }

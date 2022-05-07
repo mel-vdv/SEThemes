@@ -24,6 +24,8 @@ import { DuoComponent } from './components/duo/duo.component';
 import { DuelComponent } from './components/duel/duel.component';
 import { FinduoComponent } from './components/finduo/finduo.component';
 import { FormsModule } from '@angular/forms';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { RgpdComponent } from './components/rgpd/rgpd.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { FormsModule } from '@angular/forms';
     ButComponent,
     DuoComponent,
     DuelComponent,
-    FinduoComponent
+    FinduoComponent,
+    RgpdComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,12 @@ import { FormsModule } from '@angular/forms';
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
 
   ],
   providers: [],

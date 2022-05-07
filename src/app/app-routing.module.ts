@@ -1,3 +1,4 @@
+import { RgpdComponent } from './components/rgpd/rgpd.component';
 import { FinduoComponent } from './components/finduo/finduo.component';
 import { DuoComponent } from './components/duo/duo.component';
 
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path:'duo/:id', component:DuoComponent},
   {path:'duel/:id/:j', component: DuelComponent},
   {path:'fin/:id',component:FinComponent},
-{path: 'finduo/:idpartie/:pseudo',component:FinduoComponent}]
+{path: 'finduo/:idpartie/:pseudo',component:FinduoComponent},
+{path:'rgpd', component:RgpdComponent}]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

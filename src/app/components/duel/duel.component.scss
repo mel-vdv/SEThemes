@@ -1,7 +1,7 @@
 .container{
     width:100vw; height: 100vh;
     position: absolute; top:0px;left:0px;
-    background: linear-gradient(#46abe8,#c4fffd);
+    background: linear-gradient( #46abe8 ,25%, #c4fffd );
 }
 //---------------------     haut     -------------------------------
 .haut{
@@ -21,6 +21,7 @@
     border-radius: 2vw;
     box-sizing: border-box;
     padding: 3vw;
+    color: rgb(230,40,100);
 }
 .zone{
     width: 33%; height: 21vh;
@@ -67,11 +68,15 @@
 }
 .buzz{
     border-radius: 100%;
-    border: rgb(51, 50, 50) solid 1vw;
+    border: rgb(128, 123, 123) solid 1vw;
     height: 16vw;width: 16vw;
     animation: clignoter 1s ease-in-out infinite;
     display: flex;justify-content: center;align-items: center;
 }
+.buzz.eteint{
+    animation: none;
+}
+
 @keyframes clignoter{
    0%,100%{
  opacity: 1;
@@ -80,10 +85,10 @@
 opacity: 0.6;
    } 
 }
-.buzz:active{
-    border: rgb(51,50,50) solid 2vw;
+ .buzz.orange:active{
+    border: rgb(128,123,123) solid 2vw;
     transform: scale(0.8);
-    transform-origin: center;
+    transform: translateX(-3.2vw), translateY(-3.2vw);
 }
 .tas img{
 width: 30vw; height: auto;
@@ -111,7 +116,7 @@ left: 42vw;
 }
 .droite{
     position: relative;
-left: 77vw;
+left: 7vw;
 }
 .gauche{
     position: relative;
@@ -222,9 +227,8 @@ left: 7vw;
         85%,100%{
             transform: rotateZ(0);}} 
 .timer{
-    color: black;
+    color: white;
     font-weight: bold;
     z-index: 3;
-    font-size: 10vw;
-    //position: relative;top:4vw;left:4vw;
+    font-size: 11vw;
 }

@@ -18,6 +18,8 @@ export class CommunService {
   maPartie?:any;
   j?:number;
 
+  language?:string;
+
   maStatToday:any;
   
 

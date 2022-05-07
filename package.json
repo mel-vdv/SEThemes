@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~13.2.0",
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
+    "@angular/service-worker": "~13.2.0",
     "firebase": "^9.6.8",
     "json-server": "^0.17.0",
     "rxfire": "^6.0.0",

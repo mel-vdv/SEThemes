@@ -8,8 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class ButComponent implements OnInit {
 
   constructor() { }
-
+page:any;
   ngOnInit(): void {
+    this.page=1;
   }
 
 }
