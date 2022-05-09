@@ -15,17 +15,22 @@
     margin-top: 5vh;
     height:70vh;
     width: 80vw;
-    background-color: grey;
-     color: white;
+    background-color: #006aaa;
+    color: white;
     border-radius: 5vw;
     display: flex; justify-content: space-around; align-items: center; flex-direction: column;
     font-size: 8vw;
+}
+.stat div {
+    width: 80vw;
+    text-align: center;
 }
 .bravo{
     color: grey;
     font-size: 2em;
     width: 70vw;
     height: 15vh;
+    text-align: center;
 }
 .logo{
     width: auto;

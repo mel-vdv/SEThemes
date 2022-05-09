@@ -1,15 +1,16 @@
 <div class="container">
 
     <div *ngIf="!statVis && commun.recordBattu"><img src="./../../../assets/trophee.png" alt="trophee"></div>
-    <div class="bravo" *ngIf="!statVis && commun.recordBattu">BRAVO!!! RECORD BATTU !!</div>
+    <div class="bravo" *ngIf="!statVis && commun.recordBattu">BRAVO!!! <br/> RECORD BATTU !!</div>
 
     <div *ngIf="statVis" class="stat">
-        <div *ngIf="commun.mode==='3min'&&!commun.recordBattu">{{commun.score}} sets en 3 min </div>
-        <div *ngIf="commun.mode==='10sets'&& !commun.recordBattu">10 sets en {{commun.timer}} sec</div>
-        <div *ngIf="!commun.recordBattu">Votre record du {{commun.recordD | date:'shortDate'}} :</div>
-        <div *ngIf="commun.mode==='3min' && !commun.recordBattu">{{commun.record3m}} sets en 3 min </div>
-        <div *ngIf="commun.mode==='10sets' && !commun.recordBattu">10 sets en {{commun.record10s}} sec</div>
-        <div *ngIf="commun.mode==='5sets' && !commun.recordBattu">5 sets en {{commun.record5s}} sec</div>
+        <div *ngIf="commun.mode==='3min'">Vous avez trouvé{{commun.score}} sets en 3 min </div>
+        <div *ngIf="commun.mode==='10sets'">Votre time '10 sets' = {{commun.htmlMin}}:{{commun.htmlSec}}</div>
+        <div *ngIf="commun.mode==='5sets'">Votre time '5 sets' = {{commun.htmlMin}}:{{commun.htmlSec}}</div>
+        <div>Vos records :</div>
+        <div *ngIf="commun.record3m!==0">'3min' : {{commun.record3m}} sets</div>
+        <div *ngIf="commun.record10s!==0">'10 sets' : {{transfo(commun.record10s!)}}</div>
+        <div *ngIf="commun.record5s!==0">'5 sets': {{transfo(commun.record5s!)}}</div>
         <div>{{commun.totalSets}} sets au total </div>
         <div>(depuis le {{commun.inscrD | date:'dd/MMM/YYYY'}})</div>
     </div>

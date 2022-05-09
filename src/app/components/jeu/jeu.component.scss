@@ -9,7 +9,8 @@
 }
 //----------------------------------------------------------
 .info{
-    background-color: rgb(80, 68, 68);
+   // background-color: rgb(80, 68, 68);
+   background-color: #006aaa;
     border-radius: 5vw;
     height: 20vw; width: 90vw;
     display: flex;justify-content:space-around;align-items: center;
@@ -19,10 +20,14 @@
     width: 15vw;
     height: 15vw;
     display: flex;justify-content: center;align-items: center;
+   
 }
 .rubrique img{
    max-height: 15vw;
    max-width: 15vw;
+}
+.rubrique.timer{
+    width: 25vw;
 }
 .score{
        position: relative;
@@ -56,11 +61,12 @@
     background-color: rgba(0,0,0,0); 
 }
 .jaune{
+    box-sizing: border-box;
     animation: jaunir 2s linear forwards ;
 }
 @keyframes jaunir{
-    0%{background-color: yellow;}
-    100%{background-color: rgba(255,255,255);}
+    0%{border: 3vw solid yellow;}
+    100%{border: none;}
 }
 
 .case img{
@@ -73,6 +79,7 @@
     color: white;
     font-size: 8vw;
 }
+
 .error{
     display: block;
     animation: agiter 1s linear ;

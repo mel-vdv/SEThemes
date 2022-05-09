@@ -5,14 +5,15 @@
 
         <div class="explication" *ngIf="page==1">
             Chaque carte a plusieurs caractéristiques : <br><br>
-            couleur, nombre, forme <br>
-            (et remplissage si niveau avancé) <br><br>
+            COULEUR - FORME - NOMBRE<br>
+            (et REMPLISSAGE si niveau avancé) <br><br>
             Le but du jeu est de sélectionner 3 cartes dont chaque caractéristique est soit pareille pour les 3, soit
             différente pour les 3. <br> <br>
             "JAMAIS 2 CONTRE 1" <img (click)="page=2" src="./../../../assets/fleche-d.png" alt="fleche">
         </div>
 
         <div class="explication" *ngIf="page==2">
+            MODE 2 JOUEURS : <br>
             Lorsque vous avez trouvé un SET et que le signal est vert : BUZZEZ! <br> <br>
             Vous avez alors 10 secondes pour cliquer sur 3 cartes. <br><br>
             En cas d'erreur, vous n'aurez pas le droit de buzzer pendant 15 secondes.

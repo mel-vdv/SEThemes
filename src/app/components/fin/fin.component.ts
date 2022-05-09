@@ -46,5 +46,8 @@ export class FinComponent implements OnInit {
   stat(){
 this.statVis=true;
   }
-
+  //****** */
+transfo(nb:number){
+  return Math.floor(nb/60)+':'+(nb-(Math.floor(nb/60)*60));
+}
 }

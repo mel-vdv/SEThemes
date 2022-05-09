@@ -118,7 +118,9 @@ export class JeuComponent implements OnInit {
       this.commun.douze.push({ perso: this.commun.cartes[random], classe: "case" });
       this.commun.cartes.splice(random, 1);
     }
-    if (!this.commun.timerOn) { this.commun.lancerLeTimer(); }
+    if (!this.commun.timerOn) { 
+      console.log('on lance le timer 121');
+      this.commun.lancerLeTimer(); }
 
   }
   //************************************************************************************ */
@@ -161,7 +163,7 @@ export class JeuComponent implements OnInit {
         //console.log('bravo');
         this.gain(); }
       else { 
-        //console.log('set détecté..le voici:');
+        console.log('set détecté..le voici:',triss);
         this.setDetecte = true;
       this.showSolution(triss); }
     }
@@ -251,7 +253,9 @@ export class JeuComponent implements OnInit {
   
   //-----------------------------------------
   home() {
-    this.commun.enCours = false; this.commun.timerOn = false;
+    this.commun.enCours = false;
+    clearInterval(this.commun.tictac);
+     this.commun.timerOn = false;
     this.router.navigate(['/']);
   }
   //------------------------------------------
