@@ -123,7 +123,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     });
   }
 
-  //4/ couleur du buzzer:
+  //4/ couleur du buzzer:---------------------------------------------------
   etatBuzzer() {
     if (!this.maPartie.co1 || !this.maPartie.co2) {
       this.maPartie.posbuzz = 'milieu'; this.maPartie.colorbuzz = 'eteint';
@@ -144,17 +144,19 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   // etape 1 : on buzz  ******************************************************************
   buzzer() {
+    console.log(this.maPartie.colorbuzz,this.maPartie.posbuzz, 'interdit', this.maPartie.interdit, 'buzz?', this.maPartie.buzz);
     switch (this.maPartie.colorbuzz) {
       case 'rouge': console.log('buzz deja rouge'); break;
       case 'orange':
         switch (this.maPartie.posbuzz) {
+
           case 'milieu':
             if (this.jeSuis == 1) {
-              console.log('buzz orange, on lance le timer'); this.goTimer();
+              console.log('milieu orange, timer, gauche rouge'); this.goTimer();
               this.crud.updateqqch(this.maPartie.num, { 'buzz': true, 'interdit': 2, 'colorbuzz': 'rouge', 'posbuzz': 'gauche' });
             }
             else {
-              console.log('buzz orange, on lance le timer'); this.goTimer();
+              console.log('milieu orange, on lance le timer, droite rouge'); this.goTimer();
               this.crud.updateqqch(this.maPartie.num, { 'buzz': true, 'interdit': 1, 'colorbuzz': 'rouge', 'posbuzz': 'droite' });
             }
             break;
@@ -163,7 +165,7 @@ export class DuelComponent implements OnInit, OnDestroy {
               console.log('vous avez pas le droit de buzzer');
             }
             else {
-              console.log('buzz orange, on lance le timer'); this.goTimer();
+              console.log('droite orange,  timer, droite rouge'); this.goTimer();
               this.crud.updateqqch(this.maPartie.num, { 'buzz': true, 'colorbuzz': 'rouge' });
             }
             break;
@@ -172,7 +174,7 @@ export class DuelComponent implements OnInit, OnDestroy {
               console.log('vous avez pas le droit de buzzer');
             }
             else {
-              console.log('buzz orange, on lance le timer'); this.goTimer();
+              console.log('gauche orange, timer, gauche rouge'); this.goTimer();
               this.crud.updateqqch(this.maPartie.num, { 'buzz': true, 'colorbuzz': 'rouge' });
             }
             break;
@@ -187,7 +189,8 @@ export class DuelComponent implements OnInit, OnDestroy {
   select(carte: string) {
     if (this.maPartie.colorbuzz == 'rouge') {
       switch (this.jeSuis) {
-        case 1: if (this.maPartie.posbuzz === 'gauche') { this.dotrio(carte); }
+        case 1: if (this.maPartie.posbuzz === 'gauche') { 
+          this.dotrio(carte); }
         else { console.log('vous avez pas droit de cliquer'); } break;
         case 2: if (this.maPartie.posbuzz === 'droite') {
           this.dotrio(carte);
@@ -365,7 +368,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     }
   }
 
-  //----------------------------------------
+  //----------------------------------------------------
   piocher() {
     for (let i = 0; i < 3; i++) {
       let l = this.maPartie.cartes.length;
@@ -374,7 +377,7 @@ export class DuelComponent implements OnInit, OnDestroy {
       this.maPartie.cartes.splice(n1, 1);
     }
   }
-  //-------------------------
+  //--------------------------------------------------------
   index1 = 0;
   index2 = 0;
   index3 = 0;
@@ -423,7 +426,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     }
     return;
   }
-  //----------------------------------
+  //---------------------------------------------------------
   setDetecte?: boolean;
   dernierCombi?: boolean;
   arr12?: string[];
@@ -470,7 +473,7 @@ export class DuelComponent implements OnInit, OnDestroy {
       }
     }
   }
-  //-------------------------------------
+  //------------------------------------------------------------------
   gagnant: any; perdant: any; scoreg: any; scorep: any; date: any;
   async beforeFinduo() {
     console.log('1er then : beforeduo');
@@ -510,13 +513,13 @@ export class DuelComponent implements OnInit, OnDestroy {
       });
     }
   }
-  //--------------------------------------
+  //-------------------------------------------------------
   async partir() {
     console.log('3em then : nav2');
     await this.router.navigate([`/finduo/${this.maPartie.num}/${this.monpseudo}`]);
     return;
   }
-  //-------------------------------------------
+  //------------------------------------------------
   async updatePartie() {
     console.log('2er then:update');
     // 2 on verifie que pas doublon: 
@@ -543,7 +546,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     });
     return;
   }
-  //-------------------------------------------
+  //--------------------------------------------------
   timerVis!: boolean;
   tempsecoule!: boolean;
   timer!: number;
@@ -566,7 +569,7 @@ export class DuelComponent implements OnInit, OnDestroy {
       }
     }, 1000);
   }
-  //-----------
+  //-------------------------------------------------------------
   abandonner() {
     console.log('abandon');
 
