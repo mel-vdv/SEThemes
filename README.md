@@ -16,7 +16,7 @@
 
 ### TECHNOLOGIES ###
 - front-end : framework **ANGULAR** ![](angular.png) (HTML-SCSS-TYPESCRIPT) pas de framework css
-- Back-end et déploiement : **FIREBASE** ![](firebase.png)  (authentification via Google , database realtime, hosting)
+- Back-end et déploiement : **FIREBASE** ![](firebase.png)  (authentification via Google , database realtime, hosting : https://setheme-69d4d.firebaseapp.com/)
 - l'app est une **PWA** (Progressive Web App) : installable sur le homescreen Mobile (manifest.json), caching (service worker), notifications push (quand on reçoit un défi au duel, si on est déconnecté)
 
 ### LANCER L'APP EN LOCAL ###
