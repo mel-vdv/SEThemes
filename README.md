@@ -2,8 +2,8 @@
 **jeu SET à thèmes**
 
 ### VIDEO DEMO ###
-- le mode solo : ![](youtube.png)https://youtu.be/swr96Ytzd30
-- le mode duo : ![](youtube.png)https://youtu.be/Hbf1un1Jg-g
+- le mode solo : ![](youtube.png)https://youtu.be/lji-momJNao
+- le mode duo : ![](youtube.png)https://youtu.be/A-XaFCndDwA
 
 ### FONCTIONNALITES ###
 - authentification via le compte *Google* de l'utilisateur
